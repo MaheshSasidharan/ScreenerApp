@@ -1,29 +1,7 @@
 app.controller('HomeCtrl', ['$scope', function($scope) {
-/*
-$scope.test = "hello from home";
 
-  $scope.myChannel = {
-    // the fields below are all optional
-    videoHeight: 800,
-    videoWidth: 600,
-    video: null // Will reference the video element on success
-  };
-
-$scope.onError = function (err) {
-	console.log("OnError");
-	console.log($scope.myChannel.video);
-};
-  $scope.onStream = function (stream) {
-console.log("onStream");
-  console.log($scope.myChannel.video);
-  };
-  $scope.onSuccess = function () {
-console.log("onSuccess");
-  console.log($scope.myChannel.video);
-  };
-
-  */
-
+  var vm = this;
+  vm.test = "Hello from the other side";
 
     'use strict';
 

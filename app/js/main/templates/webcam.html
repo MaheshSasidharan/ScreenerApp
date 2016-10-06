@@ -1,3 +1,5 @@
+<h1>{{vm.test}}</h1>
+
 <div class="row-fluid">
     <div class="span6">
         <webcam class="well-small pull-right"
@@ -5,7 +7,7 @@
             on-error="onError(err)"
             on-streaming="onSuccess()"
             channel="channel"
-            placeholder="'img/ajax-loader.gif'">
+            placeholder="'img/appResources/ajax-loader.gif'">
             <div class="alert alert-error" ng-show="webcamError">
                 <span>Webcam could not be started. Did you give access to it?</span>
             </div>
