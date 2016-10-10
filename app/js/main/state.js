@@ -1,20 +1,22 @@
 // Sub-application/main Level State
-app.config(['$stateProvider', function($stateProvider) {
+app.config(['$stateProvider','$urlRouterProvider', function($stateProvider,$urlRouterProvider) {
 
   $stateProvider
-    .state('app.home', {
+    .state('screener.home', {
       url: '/home',
-      templateUrl: 'js/main/templates/webcam.html',
+      templateUrl: 'js/main/templates/home.tpl.html',
       controller: 'HomeCtrl as vm'
     })
-    .state('app.about', {
+    .state('screener.about', {
       url: '/about',
       templateUrl: 'js/main/templates/about.tpl.html',
       controller: 'AboutCtrl as vm'
     })
-    .state('app.contact', {
+    .state('screener.contact', {
       url: '/contact',
       templateUrl: 'js/main/templates/contact.tpl.html',
       controller: 'ContactCtrl as vm'
-    });
+    })
+
+    $urlRouterProvider.otherwise('/home');
 }]);
