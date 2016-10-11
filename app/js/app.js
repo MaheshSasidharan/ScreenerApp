@@ -1,4 +1,5 @@
-var app = angular.module('app', ['ui.router', 'webcam']);
+var app = angular.module('app', ['ui.router', 'webcam', 'ui.bootstrap']);
+//var app = angular.module('app', ['ui.router', 'webcam']);
 
 app.config([
     '$httpProvider',

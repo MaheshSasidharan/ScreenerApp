@@ -1,3 +1,6 @@
-<p>This is home... 111</p>
-<h1>{{vm.test}}</h1>
+<uib-tabset active="activeJustified" justified="true">
+	<uib-tab index="$index" ng-repeat="tab in vm.tabs" heading="{{tab.title}}" disable="tab.disabled">
+	<div ng-include="'templates/' + tab.content"></div>
+	</uib-tab>
+</uib-tabset>
 

@@ -1,7 +1,30 @@
 app.controller('HomeCtrl', ['$scope', function($scope) {
 
-  var vm = this;
-  vm.test = "Hello from the other side";
+    var vm = this;
+
+    vm.tabs = [
+        { title:'Assessment 1', content:'assessment_1.html' },
+        { title:'Assessment 2', content:'assessment_2.html' },
+        { title:'Assessment 3', content:'assessment_3.html', disabled: false  },
+        { title:'Assessment 4', content:'assessment_4.html', disabled: false }
+    ];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     'use strict';
 
