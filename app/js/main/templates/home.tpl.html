@@ -1,6 +1,4 @@
-<uib-tabset active="activeJustified" justified="true">
-	<uib-tab index="$index" ng-repeat="tab in vm.tabs" heading="{{tab.title}}" disable="tab.disabled">
-	<div ng-include="'templates/' + tab.content"></div>
-	</uib-tab>
-</uib-tabset>
+<h1>Welcome.</h1>
 
+<h2>Click below to get stared with the assessment</h2>
+<button class="btn btn-primary btn-lg" ng-click="vm.Helper.StartAssessment()">START</button>

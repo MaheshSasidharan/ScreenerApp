@@ -1,1 +1,4 @@
 /* app css stylesheet */
+* {
+	box-sizing:border-box;
+}

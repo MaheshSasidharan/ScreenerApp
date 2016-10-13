@@ -1,5 +1,10 @@
-Video questions
-<button>Hello</button>
+Video questions {{vm.contacts}}
+<ul>
+  <li ng-repeat="contact in vm.contacts">
+    <button ng-click="vm.Helper.TransitionState(contact.name)">{{contact.name}}</button> 
+  </li>
+</ul>
+<button>{{VidCtrlVar}}</button>
 
 <div class="row-fluid">
     <div class="span6">

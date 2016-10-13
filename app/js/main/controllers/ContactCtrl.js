@@ -1,5 +1,6 @@
 app.controller('ContactCtrl', ['$scope', '$http', function($scope, $http) {
   var vm = this;
+  vm.Users = [];
 
   vm.oService = {
   	GoToServer: function(){
@@ -10,6 +11,7 @@ app.controller('ContactCtrl', ['$scope', '$http', function($scope, $http) {
             },
     Miscellaneous: {
             ReturnDataDotData: function (data) {
+               vm.Users = data.data;
                 return data.data;
             },
             FailedInService: function () {
@@ -17,5 +19,4 @@ app.controller('ContactCtrl', ['$scope', '$http', function($scope, $http) {
             }
         }
   }
-
 }]);
