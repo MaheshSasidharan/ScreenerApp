@@ -9,6 +9,7 @@
   <title>My AngularJS App</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel='shortcut icon' href='img/favicon.ico' type='image/x-icon'/ >
   <link type="text/css" rel="stylesheet" href="css/app.css"/>
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
   <!-- <base href="/app"> -->
@@ -17,7 +18,7 @@
   <!--[if lt IE 7]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
   <![endif]-->
-  <div ng-include="'templates/topNav.html'"></div>
+  <div ng-include="'templates/main/topNav.html'"></div>
   <!-- <div ui-view="navbar"></div> -->
   <div class="main" ui-view="main"></div>
   
@@ -33,18 +34,24 @@
 
   <!-- APP -->
   <script src="js/app.js"></script>
+  <script src="js/main/common/CommonRoutines.js"></script>
+  <script src="js/main/common/Constants.js"></script>
+  <script src="js/main/common/DataService.js"></script>
+  <script src="js/main/common/Directives.js"></script>
+
+  <!-- COMMON -->
+
+  
+  <!-- CORE -->
   <script src="js/core/services/VersionService.js"></script>
   <script src="js/core/filters/VersionFilter.js"></script>
   <script src="js/core/directives/VersionDirective.js"></script>
-
-
-  <!-- CORE -->
   <script src="js/core/state.js"></script>
   <script src="js/core/controllers/AppCtrl.js"></script>
   <script src="js/core/controllers/NavbarCtrl.js"></script>
 
   <!-- MAIN -->
-  <script src="js/main/state.js"></script>
+  <script src="js/state.js"></script>
   <script src="js/main/controllers/HomeCtrl.js"></script>
   <script src="js/main/controllers/AboutCtrl.js"></script>
   <script src="js/main/controllers/ContactCtrl.js"></script>

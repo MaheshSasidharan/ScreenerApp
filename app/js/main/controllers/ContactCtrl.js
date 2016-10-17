@@ -1,22 +1,20 @@
-app.controller('ContactCtrl', ['$scope', '$http', function($scope, $http) {
-  var vm = this;
-  vm.Users = [];
+app.controller('ContactCtrl', ['$http', 'Factory_DataService', Contact]);
 
-  vm.oService = {
-  	GoToServer: function(){
-  		return $http.get("http://localhost:3000/users/test")
-                .then(
-                vm.oService.Miscellaneous.ReturnDataDotData,
-                vm.oService.Miscellaneous.FailedInService)
-            },
-    Miscellaneous: {
-            ReturnDataDotData: function (data) {
-               vm.Users = data.data;
-                return data.data;
-            },
-            FailedInService: function () {
-                CommonFactory.Notification.ShowNotification(true, Constants.Miscellaneous.SomethingWentWrong, Constants.Miscellaneous.Notification.Type.Danger);
-            }
+function Contact($http, DataService) {
+    var vm = this;
+    vm.Users = [];
+
+    vm.oService = {
+        GoToServer: function() {
+            return DataService.GetCurrentUsers().then(function(data) {
+                if (data.status) {
+                    vm.Users = data.users;
+                    return data.data;
+                } else {
+                    alert("Something Went Wrong");
+                }
+            });
+
         }
-  }
-}]);
+    }
+}

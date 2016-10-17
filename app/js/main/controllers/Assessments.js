@@ -1,45 +1,124 @@
-app.controller('AssessmentsCtrl', ['$scope','$state', function($scope,$state) {
-	var vm = this;
+app.controller('AssessmentsCtrl', ['$scope','$state','Factory_Constants', 'Factory_DataService', 'Factory_CommonRoutines', AssessmentsCtrl]);
+app.controller('VideoCtrl', ['$scope', VideoCtrl]);
 
-	vm.tabs = [
-        { title:'Assessment 1', content:'assessment_1.html', state:'assessment1' },
-        { title:'Assessment 2', content:'assessment_2.html', state:'assessment2' },
-        { title:'Assessment 3', content:'assessment_3.html', state:'assessment3', disabled: false  },
-        { title:'Assessment 4', content:'assessment_4.html', disabled: true }
-    ];
-
+function AssessmentsCtrl($scope, $state, Constants, DataService, CommonFactory) {
+  var vm = this;
+  vm.tabs = [];
   vm.currentTabIndex = 0;
   vm.currentTab = [];
-
   vm.contacts = [{ name: 'assessment1' }, { name: 'assessment2' }];
+  vm.tempAssessments = [];
+  vm.assessments = []; 
+  vm.oService = {
+      GetAssessments: function() {
+          return DataService.GetAssessments().then(function(data) {
+              if (data.status) {
+                  vm.tempAssessments = data.assessments;
+                  return data;
+              } else {
+                  alert(data.msg);
+              }
+          });
+      },
+      SaveAssessments: function() {
+          return DataService.SaveAssessments(vm.currentAssessment.arrQuestions).then(function(data) {
+              if (data.status) {                      
+                  return data;
+              } else {
+                  alert(data.msg);
+              }
+          });
+      }
+  }
 
   vm.Helper = {
-    Init: function () {
-      vm.currentTab = [vm.tabs[vm.currentTabIndex]];
-      this.TransitionState(vm.currentTab[0].state);
+    SaveAssessments: function(){
+      vm.oService.SaveAssessments().then(function(data){
+        return data;
+      });
     },
-  	TransitionState: function(state){
-  		if(state){
-  			$state.transitionTo('screener.assessments.' + state);		
-  		}
-  	},
+    Init: function () {
+      var that = this;
+      vm.oService.GetAssessments().then(function (data) {
+          that.InitAssessments();
+          that.InitTab();
+      });      
+    },
+    TransitionState: function(state){
+      if(state){
+        $state.transitionTo('screener.assessments.' + state);   
+      }
+    },
     PreviousAssessment: function(){
-      vm.currentTabIndex--;
-      this.Init();
+      var that = this;
+      vm.Helper.SaveAssessments(function(data){
+        if(data.status){
+          vm.currentTabIndex--;
+          this.InitCurrentTab();
+        }
+      }); 
     },
     NextAssessment: function(){
-      vm.currentTabIndex++;
-      this.Init();
-    }    
+      var that = this;
+      vm.Helper.SaveAssessments(function(data){
+        if(data.status){
+          vm.currentTabIndex++;
+          this.InitCurrentTab();    
+        }
+      });      
+    },
+    InitAssessments: function(){
+      vm.tempAssessments.forEach(function(oItem){
+          var assessmentIndex = CommonFactory.FindItemInArray(vm.assessments, 'assessmentId', oItem.assessmentId, 'index');
+          // If it exists, add questions to it, else create one
+          if(assessmentIndex){
+            vm.assessments[assessmentIndex].arrQuestions = vm.assessments[assessmentIndex].arrQuestions ? vm.assessments[assessmentIndex].arrQuestions : [];
+            vm.assessments[assessmentIndex].arrQuestions.push(
+                {
+                  questionId: oItem.questionId,
+                  question: oItem.question
+                }
+              );
+          }else{
+            vm.assessments.push(
+                {
+                    assessmentId: oItem.assessmentId,
+                    name: oItem.name,
+                    nickName: oItem.nickName,
+                    description: oItem.description,
+                    arrQuestions: [
+                      {
+                        questionId: oItem.questionId,
+                        question: oItem.question
+                      }
+                    ]
+                }
+              );
+          }
+      });
+      delete vm.tempAssessments;
+    },
+    InitTab: function(){
+      // vm.currentTabIndex = this.GetCurrentTabIndex();
+      vm.assessments.forEach(function(oAssessment){
+          vm.tabs.push({ title: oAssessment.name, state: oAssessment.nickName, content: oAssessment.nickName + '.html', disabled: false });
+      });      
+      this.InitCurrentTab();
+    },
+    InitCurrentTab: function(){
+      vm.currentTab = [vm.tabs[vm.currentTabIndex]];
+      vm.currentAssessment = vm.assessments[vm.currentTabIndex];
+      this.TransitionState(vm.currentTab[0].state);
+    },
+    GetTemplateURL: function(sPartialURL){      
+      //return 'question_' + sPartialURL + '.html';
+      return '' + sPartialURL + '';
+    }
   }
-	// Init
   vm.Helper.Init();
-	//vm.Helper.TransitionState(vm.contacts[0].name);
+}
 
-}]);
-
-// Video
-app.controller('VideoCtrl', ['$scope', function($scope) {
+function VideoCtrl($scope) {
     'use strict';
 
     $scope.VidCtrlVar = "Variable of VideoCtrl";
@@ -132,4 +211,4 @@ app.controller('VideoCtrl', ['$scope', function($scope) {
     // var setPixelData = function setPixelData(data, width, col, row, offset, value) {
     //     data[((row*(width*4)) + (col*4)) + offset] = value;
     // };
-}]);
+}
