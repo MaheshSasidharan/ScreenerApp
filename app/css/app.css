@@ -1,4 +1,22 @@
 /* app css stylesheet */
+
 * {
-	box-sizing:border-box;
+    box-sizing: border-box;
+}
+
+.audioRecorderTimeElapsed {
+    float: right;
+    font-family: sans-serif;
+    text-align: center;
+    width: 50px;
+    border-radius: 30px;
+    border: solid 2px #333;
+    padding: 10px;
+    margin: 0;
+    background: #337ab7;
+    color: #fff;
+}
+
+.audioRecorderRecordingControl {
+    padding-top: 10px;
 }

@@ -25,7 +25,13 @@ function DataService($http, Constants, CommonFactory) {
                 .then(
                 Helper.Miscellaneous.ReturnDataDotData,
                 Helper.Miscellaneous.FailedInService)  
-            }
+            },
+            AudioUpload: function(oSaveItem){
+              return $http.post(Helper.app + Helper.Assessments.controller + 'audioUpload', { oSaveItem: oSaveItem })
+                .then(
+                Helper.Miscellaneous.ReturnDataDotData,
+                Helper.Miscellaneous.FailedInService)  
+            },
         },
         Miscellaneous: {
             ReturnDataDotData: function (data) {
@@ -40,7 +46,8 @@ function DataService($http, Constants, CommonFactory) {
     var oService = {
         GetCurrentUsers: Helper.Users.GetCurrentUsers,
         GetAssessments: Helper.Assessments.GetAssessments,
-        SaveAssessments: Helper.Assessments.SaveAssessments
+        SaveAssessments: Helper.Assessments.SaveAssessments,
+        AudioUpload: Helper.Assessments.AudioUpload
     }
     return oService;
 }

@@ -33,18 +33,24 @@ function AssessmentsCtrl($scope, $state, Constants, DataService, CommonFactory) 
 
     vm.Helper = {
         SaveAssessments: function() {
-            return vm.oService.SaveAssessments().then(function(data) {
-                if (data.status) {
-                    if (data.insertedId && data.insertedId.insertId) {
-                        // Data has been inserted
-                        var nInsertId = data.insertedId.insertId;
-                        vm.currentAssessment.arrQuestions.forEach(function(oItem) {
-                            oItem.responseTextId = nInsertId++;
-                        });
+            if (vm.currentAssessment.arrQuestions && vm.currentAssessment.arrQuestions[0].questionId) {
+
+
+                return vm.oService.SaveAssessments().then(function(data) {
+                    if (data.status) {
+                        if (data.insertedId && data.insertedId.insertId) {
+                            // Data has been inserted
+                            var nInsertId = data.insertedId.insertId;
+                            vm.currentAssessment.arrQuestions.forEach(function(oItem) {
+                                oItem.responseTextId = nInsertId++;
+                            });
+                        }
+                        return data;
                     }
-                    return data;
-                }
-            });
+                });
+            }else{
+                return Promise.resolve();
+            }
         },
         Init: function() {
             var that = this;
