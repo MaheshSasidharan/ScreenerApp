@@ -27,10 +27,24 @@ function DataService($http, Constants, CommonFactory) {
                 Helper.Miscellaneous.FailedInService)  
             },
             AudioUpload: function(oSaveItem){
-              return $http.post(Helper.app + Helper.Assessments.controller + 'audioUpload', { oSaveItem: oSaveItem })
+              return $http.post(Helper.app + Helper.Assessments.controller + 'AudioUpload', { oSaveItem: oSaveItem })
                 .then(
                 Helper.Miscellaneous.ReturnDataDotData,
                 Helper.Miscellaneous.FailedInService)  
+            },
+            GetAudioAssessment: function (nAssmntNum) {
+                //return Helper.app + Helper.Assessments.controller + 'GetAudioAssessment';
+                return $http.get(Helper.app + Helper.Assessments.controller + 'GetAudioAssessment?nAssmntNum=' + nAssmntNum, {responseType: "blob"})
+                .then(
+                Helper.Miscellaneous.ReturnDataDotData,
+                Helper.Miscellaneous.FailedInService)
+            },
+            GetAudioAssessment: function (nAssmntNum) {
+                //return Helper.app + Helper.Assessments.controller + 'GetAudioAssessment';
+                return $http.get(Helper.app + Helper.Assessments.controller + 'GetAudioAssessment?nAssmntNum=' + nAssmntNum, {responseType: "arraybuffer"})
+                .then(
+                Helper.Miscellaneous.ReturnDataDotData,
+                Helper.Miscellaneous.FailedInService)
             },
         },
         Miscellaneous: {
@@ -47,7 +61,8 @@ function DataService($http, Constants, CommonFactory) {
         GetCurrentUsers: Helper.Users.GetCurrentUsers,
         GetAssessments: Helper.Assessments.GetAssessments,
         SaveAssessments: Helper.Assessments.SaveAssessments,
-        AudioUpload: Helper.Assessments.AudioUpload
+        AudioUpload: Helper.Assessments.AudioUpload,
+        GetAudioAssessment: Helper.Assessments.GetAudioAssessment
     }
     return oService;
 }

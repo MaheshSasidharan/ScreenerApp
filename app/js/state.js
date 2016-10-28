@@ -26,7 +26,8 @@ app.config(['$stateProvider','$urlRouterProvider', function($stateProvider,$urlR
               templateUrl: 'templates/assessments/assessment_1.html'
             })
             .state('screener.assessments.assessment_2', {
-              templateUrl: 'templates/assessments/assessment_2.html'
+              templateUrl: 'templates/assessments/assessment_2.html',
+              controller: 'AudioController as ac'
             })
             .state('screener.assessments.assessment_3', {
               templateUrl: 'templates/assessments/assessment_3.html',

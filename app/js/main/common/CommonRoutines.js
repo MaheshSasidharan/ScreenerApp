@@ -23,10 +23,10 @@ function CommonRoutines() {
                 return array[i];
             }
         },
-        TryConvertStringToDate: function(sDate){
-            if(this.ValidDate(sDate)){
+        TryConvertStringToDate: function(sDate) {
+            if (this.ValidDate(sDate)) {
                 return new Date(sDate);
-            }else{
+            } else {
                 return null;
             }
         },
@@ -229,6 +229,19 @@ function CommonRoutines() {
                 this.sType = sType;
                 this.sTitle = sTitle;
             }
+        },
+        BlobToBase64: function(blob, cb) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var dataUrl = reader.result;
+                var base64 = dataUrl.split(',')[1];
+                cb(base64);
+            };
+            reader.readAsDataURL(blob);
+        },
+        GetRandomCharacter: function() {
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            return possible.charAt(Math.floor(Math.random() * possible.length));
         }
     }
     return oCommonRoutine;

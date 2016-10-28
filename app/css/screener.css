@@ -1,0 +1,37 @@
+.SC_assessmentContainer {
+    border: 1px solid gray;
+    border-radius: 4px;
+}
+
+.SC_assessmentContainer .pager {
+    margin: 2px 0px;
+}
+
+.SC_tabHeaderContainer > a {
+    background-color: rgba(100, 200, 200, 1) !important;
+}
+
+.main dl {
+    background-color: lightgray;
+    border-radius: 2px;
+}
+
+.main dd .form-control, .main dd .input-group-btn button {
+    border-radius: 0px;
+}
+
+.main dl dt {
+    margin: 5px 0px 0px 0px;
+    padding: 0px 10px;
+    height: 22px;
+}
+
+.SC_Asmnt2_Letter{
+	text-align: center;
+    font-size: 150px;
+    font-weight: bold;
+}
+
+.SC_audioContainer{
+	padding: 1px 20px;
+}
