@@ -3,9 +3,9 @@ app.controller('AssessmentsCtrl', ['$scope', '$state', 'Factory_Constants', 'Fac
 function AssessmentsCtrl($scope, $state, Constants, DataService, CommonFactory) {
     var vm = this;
     vm.tabs = [];
+    vm.bShowPager = true;
     vm.currentTabIndex = 0;
     vm.currentTab = [];
-    vm.contacts = [{ name: 'assessment1' }, { name: 'assessment2' }];
     vm.tempAssessments = [];
     vm.assessments = [];
     vm.arrDropDowns = Constants.Assessments.arrDropDowns;
@@ -34,8 +34,6 @@ function AssessmentsCtrl($scope, $state, Constants, DataService, CommonFactory) 
     vm.Helper = {
         SaveAssessments: function() {
             if (vm.currentAssessment.arrQuestions && vm.currentAssessment.arrQuestions[0].questionId) {
-
-
                 return vm.oService.SaveAssessments().then(function(data) {
                     if (data.status) {
                         if (data.insertedId && data.insertedId.insertId) {
@@ -108,9 +106,10 @@ function AssessmentsCtrl($scope, $state, Constants, DataService, CommonFactory) 
             delete vm.tempAssessments;
             // Individual formatting
             vm.assessments[0].arrQuestions[0].response = CommonFactory.TryConvertStringToDate(vm.assessments[0].arrQuestions[0].response);
+            vm.assessments[1].arrQuestions[0].response = CommonFactory.GetRandomCharacter();
+            vm.assessments[1].arrQuestions[0].displayedResponse = "---";
         },
         InitTab: function() {
-            // vm.currentTabIndex = this.GetCurrentTabIndex();
             vm.assessments.forEach(function(oAssessment) {
                 vm.tabs.push({ title: oAssessment.name, state: oAssessment.nickName, content: oAssessment.nickName + '.html', disabled: false });
             });
@@ -122,8 +121,10 @@ function AssessmentsCtrl($scope, $state, Constants, DataService, CommonFactory) 
             this.TransitionState(vm.currentTab[0].state);
         },
         GetTemplateURL: function(sPartialURL) {
-            //return 'question_' + sPartialURL + '.html';
             return '' + sPartialURL + '';
+        },
+        ShowHidePager: function(bShow){
+            vm.bShowPager = bShow;
         }
     }
     vm.Helper.Init();
