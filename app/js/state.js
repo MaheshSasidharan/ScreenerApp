@@ -27,10 +27,14 @@ app.config(['$stateProvider','$urlRouterProvider', function($stateProvider,$urlR
             })
             .state('screener.assessments.assessment_2', {
               templateUrl: 'templates/assessments/assessment_2.html',
-              controller: 'AudioController as ac'
+              controller: 'AudioController as au'
             })
             .state('screener.assessments.assessment_3', {
               templateUrl: 'templates/assessments/assessment_3.html',
+              controller: 'VoiceController as vo'
+            })
+            .state('screener.assessments.assessment_4', {
+              templateUrl: 'templates/assessments/assessment_4.html',
               controller: 'VideoCtrl as vid'
             });
     $urlRouterProvider.otherwise('/home');
