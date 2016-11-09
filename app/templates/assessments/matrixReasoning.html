@@ -1,0 +1,28 @@
+<div ng-include="'templates/assessments/questions.html'"></div>
+<div class="SC_assessmentInnerContainer">
+    <div class="ImageSetContainer center-block">
+        <!-- Question -->
+        <table class="table table-bordered">
+            <tbody>
+                <tr ng-repeat="arrURLs in ma.oCurrentSet.oFrame.arrURLs">
+                    <td ng-repeat="src in arrURLs">
+                        <img ng-src="{{src}}" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <h2>Select One answer</h2>
+    <div class="ImageSetContainer center-block">
+        <!-- Solutions -->
+        <table class="table table-bordered table-hover">
+            <tbody>
+                <tr ng-repeat="arrURLs in ma.oCurrentSet.oSolution.arrURLs track by $index">
+                    <td ng-repeat="src in arrURLs track by $index">
+                        <img ng-src="{{src}}" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -84,7 +84,7 @@ function Constants() {
             audioRecordLength: 5, // seconds
             arrVoices: [
                 '1_1',
-                '1_2',
+                //'1_2',
                 //'1_3',
                 // '2_1',
                 // '2_2',
@@ -93,6 +93,37 @@ function Constants() {
                 // '3_2',
                 // '3_3',
             ]
+        },
+        MatrixReasoning: {
+            arrImages: [{
+                sSetNum: "set1",
+                oFrame: {
+                    nWidth: 2,
+                    nHeight: 3,
+                    sSetType: "frameSets",
+                    arrPics: [
+                        "1_square.png",
+                        "2_triangle.png",
+                        "circle.png",
+                        "pentagon.png",
+                        "questionmark.png",
+                        "pentagon.png"
+                    ]
+                },
+                oSolution: {
+                    nWidth: 6,
+                    nHeight: 1,
+                    sSetType: "solutionSets",
+                    arrPics: [
+                        "circle.png",
+                        "pentagon.png",
+                        "1_square.png",
+                        "2_triangle.png",
+                        "circle.png",
+                        "pentagon.png"
+                    ]
+                }
+            }]
         }
     }
     return oConstants;

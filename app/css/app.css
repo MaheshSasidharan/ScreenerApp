@@ -20,3 +20,18 @@
 .audioRecorderRecordingControl {
     padding-top: 10px;
 }
+
+.InlineBlock {
+    display: inline-block;
+}
+
+/* Matrix Reasoning*/
+
+.ImageSetContainer {
+    text-align: center;
+}
+
+.center-block {
+    float: none;
+    margin: auto;
+}

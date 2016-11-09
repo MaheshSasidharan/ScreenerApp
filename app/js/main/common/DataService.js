@@ -5,59 +5,62 @@ function DataService($http, Constants, CommonFactory) {
         app: "http://localhost:3000/",
         Users: {
             controller: "users/",
-            GetCurrentUsers: function () {                
+            GetCurrentUsers: function() {
                 return $http.get(Helper.app + Helper.Users.controller + 'test')
-                .then(
-                Helper.Miscellaneous.ReturnDataDotData,
-                Helper.Miscellaneous.FailedInService)
+                    .then(
+                        Helper.Miscellaneous.ReturnDataDotData,
+                        Helper.Miscellaneous.FailedInService)
             }
         },
         Assessments: {
             controller: "assessments/",
-            GetAssessments: function () {
+            GetAssessments: function() {
                 return $http.get(Helper.app + Helper.Assessments.controller + 'GetAssessments')
-                .then(
-                Helper.Miscellaneous.ReturnDataDotData,
-                Helper.Miscellaneous.FailedInService)
+                    .then(
+                        Helper.Miscellaneous.ReturnDataDotData,
+                        Helper.Miscellaneous.FailedInService)
             },
-            SaveAssessments: function(oSaveItem){
-              return $http.post(Helper.app + Helper.Assessments.controller + 'SaveAssessments', { oSaveItem: oSaveItem})
-                .then(
-                Helper.Miscellaneous.ReturnDataDotData,
-                Helper.Miscellaneous.FailedInService)  
+            SaveAssessments: function(oSaveItem) {
+                return $http.post(Helper.app + Helper.Assessments.controller + 'SaveAssessments', { oSaveItem: oSaveItem })
+                    .then(
+                        Helper.Miscellaneous.ReturnDataDotData,
+                        Helper.Miscellaneous.FailedInService)
             },
-            AudioUploadWord: function(oSaveItem){
-              return $http.post(Helper.app + Helper.Assessments.controller + 'AudioUploadWord', { oSaveItem: oSaveItem })
-                .then(
-                Helper.Miscellaneous.ReturnDataDotData,
-                Helper.Miscellaneous.FailedInService)  
+            AudioUploadWord: function(oSaveItem) {
+                return $http.post(Helper.app + Helper.Assessments.controller + 'AudioUploadWord', { oSaveItem: oSaveItem })
+                    .then(
+                        Helper.Miscellaneous.ReturnDataDotData,
+                        Helper.Miscellaneous.FailedInService)
             },
-            AudioUpload: function(oSaveItem){
-              return $http.post(Helper.app + Helper.Assessments.controller + 'AudioUpload', { oSaveItem: oSaveItem })
-                .then(
-                Helper.Miscellaneous.ReturnDataDotData,
-                Helper.Miscellaneous.FailedInService)  
+            AudioUpload: function(oSaveItem) {
+                return $http.post(Helper.app + Helper.Assessments.controller + 'AudioUpload', { oSaveItem: oSaveItem })
+                    .then(
+                        Helper.Miscellaneous.ReturnDataDotData,
+                        Helper.Miscellaneous.FailedInService)
             },
-            GetAudioAssessment: function (nAssmntNum) {
+            GetAudioAssessment: function(nAssmntNum) {
                 //return Helper.app + Helper.Assessments.controller + 'GetAudioAssessment';
-                return $http.get(Helper.app + Helper.Assessments.controller + 'GetAudioAssessment?nAssmntNum=' + nAssmntNum, {responseType: "blob"})
-                .then(
-                Helper.Miscellaneous.ReturnDataDotData,
-                Helper.Miscellaneous.FailedInService)
+                return $http.get(Helper.app + Helper.Assessments.controller + 'GetAudioAssessment?nAssmntNum=' + nAssmntNum, { responseType: "blob" })
+                    .then(
+                        Helper.Miscellaneous.ReturnDataDotData,
+                        Helper.Miscellaneous.FailedInService)
             },
-            GetAudioAssessment: function (nAssmntNum) {
+            GetAudioAssessment: function(nAssmntNum) {
                 //return Helper.app + Helper.Assessments.controller + 'GetAudioAssessment';
-                return $http.get(Helper.app + Helper.Assessments.controller + 'GetAudioAssessment?nAssmntNum=' + nAssmntNum, {responseType: "arraybuffer"})
-                .then(
-                Helper.Miscellaneous.ReturnDataDotData,
-                Helper.Miscellaneous.FailedInService)
+                return $http.get(Helper.app + Helper.Assessments.controller + 'GetAudioAssessment?nAssmntNum=' + nAssmntNum, { responseType: "arraybuffer" })
+                    .then(
+                        Helper.Miscellaneous.ReturnDataDotData,
+                        Helper.Miscellaneous.FailedInService)
+            },
+            GetSourceAddress: function() {
+                return Helper.app + Helper.Assessments.controller;
             },
         },
         Miscellaneous: {
-            ReturnDataDotData: function (data) {
+            ReturnDataDotData: function(data) {
                 return data.data;
             },
-            FailedInService: function () {
+            FailedInService: function() {
                 Notification.ShowNotification(true, Constants.Miscellaneous.SomethingWentWrong, Constants.Miscellaneous.Notification.Type.Danger);
             }
         }
@@ -69,7 +72,8 @@ function DataService($http, Constants, CommonFactory) {
         SaveAssessments: Helper.Assessments.SaveAssessments,
         AudioUploadWord: Helper.Assessments.AudioUploadWord,
         AudioUpload: Helper.Assessments.AudioUpload,
-        GetAudioAssessment: Helper.Assessments.GetAudioAssessment
+        GetAudioAssessment: Helper.Assessments.GetAudioAssessment,
+        GetSourceAddress: Helper.Assessments.GetSourceAddress
     }
     return oService;
 }

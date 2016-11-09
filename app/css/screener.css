@@ -16,7 +16,8 @@
     border-radius: 2px;
 }
 
-.main dd .form-control, .main dd .input-group-btn button {
+.main dd .form-control,
+.main dd .input-group-btn button {
     border-radius: 0px;
 }
 
@@ -26,12 +27,17 @@
     /*height: 22px;*/
 }
 
-.SC_Asmnt2_Letter{
-	text-align: center;
+.SC_Asmnt2_Letter {
+    text-align: center;
     font-size: 150px;
     font-weight: bold;
 }
 
-.SC_audioContainer{
-	padding: 1px 20px;
+.SC_audioContainer {
+    padding: 1px 20px;
+    text-align: center;;
+}
+
+.SC_assessmentInnerContainer {
+    padding: 20px
 }
