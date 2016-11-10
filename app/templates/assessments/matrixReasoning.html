@@ -1,28 +1,36 @@
 <div ng-include="'templates/assessments/questions.html'"></div>
 <div class="SC_assessmentInnerContainer">
-    <div class="ImageSetContainer center-block">
-        <!-- Question -->
-        <table class="table table-bordered">
-            <tbody>
-                <tr ng-repeat="arrURLs in ma.oCurrentSet.oFrame.arrURLs">
-                    <td ng-repeat="src in arrURLs">
-                        <img ng-src="{{src}}" />
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="text-center MA_NextButton">
+        <button class="btn btn-md btn-success" ng-click="ma.Helper.GetMartixImages()" ng-show="ma.bShowNextButton">NEXT</button>
     </div>
-    <h2>Select One answer</h2>
-    <div class="ImageSetContainer center-block">
-        <!-- Solutions -->
-        <table class="table table-bordered table-hover">
-            <tbody>
-                <tr ng-repeat="arrURLs in ma.oCurrentSet.oSolution.arrURLs track by $index">
-                    <td ng-repeat="src in arrURLs track by $index">
-                        <img ng-src="{{src}}" />
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div ng-show="ma.oCurrentSet">
+        <div class="ImageSetContainer center-block">
+            <!-- Question -->
+            <table class="table table-bordered">
+                <tbody>
+                    <tr ng-repeat="arrURLs in ma.oCurrentSet.frameSets.arrURLs">
+                        <td ng-repeat="src in arrURLs">
+                            <img ng-src="{{src}}" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <h2>Select One answer</h2>
+        <div class="ImageSetContainer center-block">
+            <!-- Solutions -->
+            <table class="table table-bordered table-hover">
+                <tbody>
+                    <tr ng-repeat="arrURLs in ma.oCurrentSet.solutionSets.arrURLs track by $index">
+                        <td ng-repeat="src in arrURLs track by $index" ng-click="ma.Helper.AnswerSelected(src)">
+                            <img ng-src="{{src}}" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div ng-show="ma.oCurrentSet === null">
+        <h2>This assessment is completed. Click Next.</h2>
     </div>
 </div>

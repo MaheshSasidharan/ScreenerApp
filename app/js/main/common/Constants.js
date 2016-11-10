@@ -101,20 +101,20 @@ function Constants() {
                     nWidth: 2,
                     nHeight: 3,
                     sSetType: "frameSets",
-                    arrPics: [
+                    arrPicNames: [
                         "1_square.png",
                         "2_triangle.png",
-                        "circle.png",
+                        "1_square.png",
                         "pentagon.png",
                         "questionmark.png",
                         "pentagon.png"
                     ]
                 },
                 oSolution: {
-                    nWidth: 6,
-                    nHeight: 1,
+                    nWidth: 3,
+                    nHeight: 2,
                     sSetType: "solutionSets",
-                    arrPics: [
+                    arrPicNames: [
                         "circle.png",
                         "pentagon.png",
                         "1_square.png",

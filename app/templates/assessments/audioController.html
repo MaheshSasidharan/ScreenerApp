@@ -19,7 +19,6 @@
     <!-- <button class="btn btn-md btn-success" ng-init="showStart = true" ng-click="au.oAudio.StartRecorderCountDown(); showStart = false" ng-show="showStart">START</button> -->
     <div class="text-center">
         <uib-progressbar class="progress-striped_1 active_1" max="au.oAudio.nMaxTime" value="au.oAudio.nSpentTime" type="{{au.oAudio.sType}}" ng-show="au.oAudio.bShowProgressBar"></uib-progressbar>
-        <!-- <uib-progressbar class="progress-striped active" max="au.oAudio.nMaxTime" value="au.oAudio.nSpentTime" type="{{type}}" ng-show="!au.oAudio.bShowPlayButton">{{type}}</uib-progressbar> -->
         <button class="btn btn-md btn-success" ng-click="au.Helper.PlayNext('next')" ng-show="au.oAudio.bShowPlayButton">{{au.sTextOnPlayButton}}</button>
     </div>
 

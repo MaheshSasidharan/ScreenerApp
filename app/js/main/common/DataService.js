@@ -39,14 +39,12 @@ function DataService($http, Constants, CommonFactory) {
                         Helper.Miscellaneous.FailedInService)
             },
             GetAudioAssessment: function(nAssmntNum) {
-                //return Helper.app + Helper.Assessments.controller + 'GetAudioAssessment';
                 return $http.get(Helper.app + Helper.Assessments.controller + 'GetAudioAssessment?nAssmntNum=' + nAssmntNum, { responseType: "blob" })
                     .then(
                         Helper.Miscellaneous.ReturnDataDotData,
                         Helper.Miscellaneous.FailedInService)
             },
             GetAudioAssessment: function(nAssmntNum) {
-                //return Helper.app + Helper.Assessments.controller + 'GetAudioAssessment';
                 return $http.get(Helper.app + Helper.Assessments.controller + 'GetAudioAssessment?nAssmntNum=' + nAssmntNum, { responseType: "arraybuffer" })
                     .then(
                         Helper.Miscellaneous.ReturnDataDotData,
@@ -55,6 +53,12 @@ function DataService($http, Constants, CommonFactory) {
             GetSourceAddress: function() {
                 return Helper.app + Helper.Assessments.controller;
             },
+            GetPicNamesMatrixAssessment: function() {
+                return $http.get(Helper.app + Helper.Assessments.controller + 'GetPicNamesMatrixAssessment')
+                    .then(
+                        Helper.Miscellaneous.ReturnDataDotData,
+                        Helper.Miscellaneous.FailedInService)
+            }
         },
         Miscellaneous: {
             ReturnDataDotData: function(data) {
@@ -73,7 +77,8 @@ function DataService($http, Constants, CommonFactory) {
         AudioUploadWord: Helper.Assessments.AudioUploadWord,
         AudioUpload: Helper.Assessments.AudioUpload,
         GetAudioAssessment: Helper.Assessments.GetAudioAssessment,
-        GetSourceAddress: Helper.Assessments.GetSourceAddress
+        GetSourceAddress: Helper.Assessments.GetSourceAddress,
+        GetPicNamesMatrixAssessment: Helper.Assessments.GetPicNamesMatrixAssessment
     }
     return oService;
 }
