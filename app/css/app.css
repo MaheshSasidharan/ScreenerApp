@@ -25,17 +25,29 @@
     display: inline-block;
 }
 
+
 /* Matrix Reasoning*/
 
 .ImageSetContainer {
     text-align: center;
 }
 
-.center-block {
-    float: none;
-    margin: auto;
+.ImageSetContainer_Solution td:hover {
+    background: rgba(256, 0, 0, 0.4);
 }
 
-.MA_NextButton{
+.ImageSetContainer_Solution td {
+    transition: background 300ms;
+}
+
+.ImageSetContainer_Solution td.PicSelected {
+    background: rgba(0, 256, 0, 0.4);
+}
+
+.ImageSetContainer_Solution td.PicSelected > img {    
+    border-radius: 5px;
+}
+
+.MA_NextButton {
     margin: 5px;
 }

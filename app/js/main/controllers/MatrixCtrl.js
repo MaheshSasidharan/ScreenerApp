@@ -5,7 +5,9 @@ function MatrixController($scope, $timeout, $interval, $sce, Constants, CommonFa
     var ma = this;
     ma.src = null;
     var arrImages = null;
+    var arrImageResponse = [];
     ma.nCurrentPicSetIndex = 0;
+    ma.oCurrentPic = null;
     ma.bShowNextButton = false;
     ma.oService = {
         GetSourceAddress: function() {
@@ -31,11 +33,11 @@ function MatrixController($scope, $timeout, $interval, $sce, Constants, CommonFa
                         var nNumberOfSlashes = (sPicName.match(/\//g) || []).length;
                         switch (nNumberOfSlashes) {
                             case 0:
-                                var sSetNum = sPicName;
+                                var sSetName = sPicName;
                                 if (!arrImages) {
                                     arrImages = [];
                                 }
-                                arrImages.push({ sSetNum: sSetNum });
+                                arrImages.push({ sSetName: sSetName });
                                 break;
                             case 1:
                                 var sSetType = sPicName.substr(sPicName.indexOf("/") + 1);
@@ -50,24 +52,55 @@ function MatrixController($scope, $timeout, $interval, $sce, Constants, CommonFa
                                     arrImages[arrImages.length - 1][sSetType].nHeight = sDimension[1];
                                     return;
                                 } else {
-                                    if (!arrImages[arrImages.length - 1][sSetType].arrPicNames) {
-                                        arrImages[arrImages.length - 1][sSetType].arrPicNames = [];
+                                    if (!arrImages[arrImages.length - 1][sSetType].arroPics) {
+                                        arrImages[arrImages.length - 1][sSetType].arroPics = [];
                                     }
-                                    arrImages[arrImages.length - 1][sSetType].arrPicNames.push(sPicName.substring(sPicName.lastIndexOf("/") + 1));
+                                    var sSource = ma.oService.GetSourceAddress();
+                                    var sMatrixAssessment = sSource + "GetMatrixAssessment";
+
+                                    var sTempSetName = arrImages[arrImages.length - 1].sSetName;
+                                    var sTempSetType = arrImages[arrImages.length - 1][sSetType].sSetType;
+                                    var sTempPicName = sPicName.substring(sPicName.lastIndexOf("/") + 1);
+                                    var sTempPicURL = sMatrixAssessment + "?sSetName=" + sTempSetName + "&sSetType=" + sTempSetType + "&sPicName=" + sTempPicName;
+                                    var oPic = {
+                                        sPicName: sTempPicName,
+                                        sPicURL: sTempPicURL,
+                                        isSelected: false
+                                    }
+                                    arrImages[arrImages.length - 1][sSetType].arroPics.push(oPic);
                                 };
                                 break;
                         }
                     });
                 }
+                //console.log(arrImages);
                 ma.Helper.GetMartixImages();
             });
         },
-
         GetMartixImages: function() {
+            if(ma.oCurrentPic){ // If an answer is selected, save that
+                var selectOptions = [];
+                ma.oCurrentSet.solutionSets.arroPics.forEach(function(oPic){
+                    selectOptions.push(oPic.sPicName);
+                });
+                var oImageResponse = {
+                    setName: ma.oCurrentSet.sSetName,
+                    selectedPic: ma.oCurrentPic.sPicName,
+                    selectOptions: selectOptions
+                }
+                arrImageResponse.push(oImageResponse);
+            }
+            if (arrImages.length === ma.nCurrentPicSetIndex) {
+                //console.log(arrImageResponse);
+                ma.oCurrentSet = null;
+                $scope.$parent.vm.Helper.ShowHidePager(true);
+                ma.bShowNextButton = false;
+                $scope.$parent.vm.currentAssessment.arrQuestions[0].response = JSON.stringify(arrImageResponse);
+                console.log($scope.$parent.vm.currentAssessment);
+                return;
+            }
+            ma.oCurrentPic = null;
             ma.bShowNextButton = false;
-            var sSource = ma.oService.GetSourceAddress();
-            var sMatrixAssessment = sSource + "GetMatrixAssessment";
-            //var oCurrentSet = CommonFactory.FindItemInArray(arrImages, 'sSetNum', sSetNum, 'item');
             var oCurrentSet = arrImages[ma.nCurrentPicSetIndex++];
 
             var arrImageTypes = ["frameSets", "solutionSets"];
@@ -76,30 +109,20 @@ function MatrixController($scope, $timeout, $interval, $sce, Constants, CommonFa
                 var nNextImageIndex = 0;
                 for (var i = 0; i < oCurrentSet[sImageType].nHeight; i++) {
                     for (var j = 0; j < oCurrentSet[sImageType].nWidth; j++) {
-                        var sSetNum = oCurrentSet.sSetNum;
-                        var sSetType = oCurrentSet[sImageType].sSetType;
-                        var sPicNum = oCurrentSet[sImageType].arrPicNames[nNextImageIndex++];
-                        var src = sMatrixAssessment + "?sSetNum=" + sSetNum + "&sSetType=" + sSetType + "&sPicNum=" + sPicNum;
                         if (!oCurrentSet[sImageType].arrURLs[i]) {
                             oCurrentSet[sImageType].arrURLs[i] = [];
                         }
-                        oCurrentSet[sImageType].arrURLs[i][j] = src;
+                        oCurrentSet[sImageType].arrURLs[i][j] = oCurrentSet[sImageType].arroPics[nNextImageIndex++];
                     }
                 }
             });
+            //console.log(oCurrentSet);
             ma.oCurrentSet = oCurrentSet;
         },
-        AnswerSelected: function(src) {
-            var queryString = '&sPicNum=';
-            var sPicNum = src.substring(src.indexOf(queryString) + queryString.length);
-            console.log(sPicNum);
-            if (arrImages.length === ma.nCurrentPicSetIndex) {
-                $scope.$parent.vm.Helper.ShowHidePager(true);
-                ma.oCurrentSet = null;
-            } else {
-                ma.bShowNextButton = true;
-                //ma.Helper.GetMartixImages();
-            }
+        AnswerSelected: function(oPic) {
+            ma.oCurrentPic = oPic;            
+            ma.bShowNextButton = true;
+            //console.log(oPic.sPicName);
         }
     }
     ma.Helper.Init();

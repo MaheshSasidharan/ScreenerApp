@@ -8,22 +8,25 @@
             <!-- Question -->
             <table class="table table-bordered">
                 <tbody>
-                    <tr ng-repeat="arrURLs in ma.oCurrentSet.frameSets.arrURLs">
-                        <td ng-repeat="src in arrURLs">
-                            <img ng-src="{{src}}" />
+                    <tr ng-repeat="arrURLs in ma.oCurrentSet.frameSets.arrURLs track by $index">
+                        <td ng-repeat="oPic in arrURLs track by $index">
+                            <img ng-src="{{oPic.sPicURL}}" />
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <h2>Select One answer</h2>
-        <div class="ImageSetContainer center-block">
+        <div class="ImageSetContainer ImageSetContainer_Solution center-block">
             <!-- Solutions -->
-            <table class="table table-bordered table-hover">
+            <table class="table table-bordered">
                 <tbody>
                     <tr ng-repeat="arrURLs in ma.oCurrentSet.solutionSets.arrURLs track by $index">
-                        <td ng-repeat="src in arrURLs track by $index" ng-click="ma.Helper.AnswerSelected(src)">
-                            <img ng-src="{{src}}" />
+                        <td ng-repeat="oPic in arrURLs track by $index" 
+                        ng-click="ma.Helper.AnswerSelected(oPic)" 
+                        ng-class="{'PicSelected': ma.oCurrentPic.sPicName === oPic.sPicName}">
+                            <img ng-src="{{oPic.sPicURL}}" />
+                            {{selectedPic}}
                         </td>
                     </tr>
                 </tbody>
@@ -31,6 +34,6 @@
         </div>
     </div>
     <div ng-show="ma.oCurrentSet === null">
-        <h2>This assessment is completed. Click Next.</h2>
+        <h2>You have completed this assessment. Please click Next.</h2>
     </div>
 </div>
