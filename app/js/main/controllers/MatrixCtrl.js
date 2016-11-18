@@ -6,6 +6,7 @@ function MatrixController($scope, $timeout, $interval, $sce, Constants, CommonFa
     ma.src = null;
     var arrImages = null;
     var arrImageResponse = [];
+    var responseTime = null;
     ma.nCurrentPicSetIndex = 0;
     ma.oCurrentPic = null;
     ma.bShowNextButton = false;
@@ -72,8 +73,8 @@ function MatrixController($scope, $timeout, $interval, $sce, Constants, CommonFa
                                 break;
                         }
                     });
+                    arrImages = CommonFactory.RandomizeSolutionSet(arrImages);
                 }
-                //console.log(arrImages);
                 ma.Helper.GetMartixImages();
             });
         },
@@ -86,17 +87,16 @@ function MatrixController($scope, $timeout, $interval, $sce, Constants, CommonFa
                 var oImageResponse = {
                     setName: ma.oCurrentSet.sSetName,
                     selectedPic: ma.oCurrentPic.sPicName,
-                    selectOptions: selectOptions
+                    selectOptions: selectOptions,
+                    responseTime: responseTime
                 }
                 arrImageResponse.push(oImageResponse);
             }
             if (arrImages.length === ma.nCurrentPicSetIndex) {
-                //console.log(arrImageResponse);
                 ma.oCurrentSet = null;
                 $scope.$parent.vm.Helper.ShowHidePager(true);
                 ma.bShowNextButton = false;
                 $scope.$parent.vm.currentAssessment.arrQuestions[0].response = JSON.stringify(arrImageResponse);
-                console.log($scope.$parent.vm.currentAssessment);
                 return;
             }
             ma.oCurrentPic = null;
@@ -116,13 +116,13 @@ function MatrixController($scope, $timeout, $interval, $sce, Constants, CommonFa
                     }
                 }
             });
-            //console.log(oCurrentSet);
             ma.oCurrentSet = oCurrentSet;
+            responseTime = new Date();
         },
         AnswerSelected: function(oPic) {
+            responseTime = new Date() - responseTime;
             ma.oCurrentPic = oPic;            
             ma.bShowNextButton = true;
-            //console.log(oPic.sPicName);
         }
     }
     ma.Helper.Init();

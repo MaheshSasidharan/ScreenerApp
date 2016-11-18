@@ -256,6 +256,22 @@ function CommonRoutines() {
                 type = 'danger';
             }
             return type;
+        },
+        RandomizeSolutionSet: function(array){
+            console.log(array);
+            array.forEach(function(oItem){
+                oCommonRoutine.RandomizeArray(oItem.solutionSets.arroPics);
+            });
+            return array;
+        },
+        RandomizeArray: function(array){            
+            var nNewIndex, temp;
+            for(var i = 0; i < array.length; i++){
+                nNewIndex = Math.floor((Math.random() * ( i + 1)));
+                temp = array[i];
+                array[i] = array[nNewIndex];
+                array[nNewIndex] = temp;
+            }
         }
     }
     return oCommonRoutine;
