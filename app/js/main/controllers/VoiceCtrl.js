@@ -41,7 +41,7 @@ function VoiceController($scope, $timeout, $interval, $sce, Constants, CommonFac
             CommonFactory.BlobToBase64(vo.oAudio.recorded, function(base64) { // encode
                 var oSaveItem = { 'blob': base64, 'character': oAudioAssessment.response };
                 DataService.AudioUpload(oSaveItem).then(function(data) {
-                    $scope.$parent.vm.Helper.ShowHidePager(true);
+                    $scope.$parent.vm.Helper.ShowHidePager(true, Constants.Miscellaneous.AssessmentCompleteNext);
                 });
             });
         },

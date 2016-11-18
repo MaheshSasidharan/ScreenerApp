@@ -41,3 +41,13 @@
 .SC_assessmentInnerContainer {
     padding: 20px
 }
+
+/* Time Duration */
+.progress-bar {
+    -webkit-transition: width linear;
+    -moz-transition: width linear;
+    -ms-transition: width linear;
+    -o-transition: width linear;
+    transition: width linear;
+}
+/**/

@@ -39,7 +39,7 @@ function AudioController($scope, $timeout, $interval, $sce, Constants, CommonFac
                             au.sTextOnPlayButton = "Next audio";
                         } else if (au.arrVoiceOPAndIP.length - 1 == au.audioIndex) {
                             au.oAudio.bShowPlayButton = false;
-                            $scope.$parent.vm.Helper.ShowHidePager(true);
+                            $scope.$parent.vm.Helper.ShowHidePager(true, Constants.Miscellaneous.AssessmentCompleteNext);
                         }
                     }, 1000);
                 } else {

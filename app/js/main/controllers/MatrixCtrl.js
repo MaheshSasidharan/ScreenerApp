@@ -94,7 +94,7 @@ function MatrixController($scope, $timeout, $interval, $sce, Constants, CommonFa
             }
             if (arrImages.length === ma.nCurrentPicSetIndex) {
                 ma.oCurrentSet = null;
-                $scope.$parent.vm.Helper.ShowHidePager(true);
+                $scope.$parent.vm.Helper.ShowHidePager(true, Constants.Miscellaneous.AssessmentCompleteNext);
                 ma.bShowNextButton = false;
                 $scope.$parent.vm.currentAssessment.arrQuestions[0].response = JSON.stringify(arrImageResponse);
                 return;

@@ -3,6 +3,7 @@ app.controller('AssessmentsCtrl', ['$scope', '$state', 'Factory_Constants', 'Fac
 function AssessmentsCtrl($scope, $state, Constants, DataService, CommonFactory) {
     var vm = this;
     vm.tabs = [];
+    vm.sShowPagerMessage = null;
     vm.bShowPager = true;
     vm.currentTabIndex = 0;
     vm.currentTab = [];
@@ -123,8 +124,9 @@ function AssessmentsCtrl($scope, $state, Constants, DataService, CommonFactory) 
         GetTemplateURL: function(sPartialURL) {
             return '' + sPartialURL + '';
         },
-        ShowHidePager: function(bShow){
+        ShowHidePager: function(bShow, sMessage){
             vm.bShowPager = bShow;
+            vm.sShowPagerMessage = sMessage;
         }
     }
     vm.Helper.Init();
