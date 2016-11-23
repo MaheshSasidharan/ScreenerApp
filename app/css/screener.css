@@ -50,4 +50,60 @@
     -o-transition: width linear;
     transition: width linear;
 }
-/**/
+
+
+/*Round Button hover effects*/
+/*Glass effect button*/
+.glass {
+    background: red;
+    background: linear-gradient(red, black);
+    padding: 8px;
+    position: relative;
+    border-radius: 3px;
+}
+
+.glass:after {
+    content: "";
+    background: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.2));
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    width: calc(100% - 0px);
+    height: 50%;
+    border-radius: 2px 2px 0px 0px;
+}
+
+/*End of glass*/
+
+.SC_ButtonPress{
+    height: 200px;
+    width: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: none;
+    transition: all linear 100ms;
+}
+
+.SC_ButtonPress.buttonPressed{
+    background: linear-gradient(red, red);    
+}
+
+.SC_ButtonPress.buttonPressed{
+    height:195px;
+    width: 195px;  
+    margin-top: 5px;
+}
+
+.SC_ButtonPress.glass:after {
+    height: 100%;
+    box-shadow: inset -20px -20px 96px rgba(128,0,0, 1);
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    transition: all linear 100ms;
+}
+
+.SC_ButtonPress.glass.buttonPressed:after {
+    box-shadow: inset -15px -5px 96px rgba(128,0,0, 1);    
+}
+/* End TD*/

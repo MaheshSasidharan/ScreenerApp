@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+*:focus{
+    outline: none;
+}
+
 .audioRecorderTimeElapsed {
     float: right;
     font-family: sans-serif;
@@ -44,7 +48,7 @@
     background: rgba(0, 256, 0, 0.4);
 }
 
-.ImageSetContainer_Solution td.PicSelected > img {    
+.ImageSetContainer_Solution td.PicSelected > img {
     border-radius: 5px;
 }
 
