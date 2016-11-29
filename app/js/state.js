@@ -29,6 +29,10 @@ app.config(['$stateProvider','$urlRouterProvider', function($stateProvider,$urlR
               templateUrl: 'templates/assessments/timeDuration.html',
               controller: 'TimeDuration as td'
             })
+            .state('screener.assessments.metronome', {
+              templateUrl: 'templates/assessments/metronome.html',
+              controller: 'Metronome as me'
+            })
             .state('screener.assessments.matrixReasoning', {
               templateUrl: 'templates/assessments/matrixReasoning.html',
               controller: 'MatrixController as ma'
