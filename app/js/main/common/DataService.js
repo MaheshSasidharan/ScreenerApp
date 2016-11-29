@@ -2,7 +2,10 @@
 
 function DataService($http, Constants, CommonFactory) {
     var Helper = {
-        app: "http://localhost:3000/",
+        //app: "http://localhost:5000/",
+        //app: "http://localhost:3000/",
+        //app: "http://localhost:6001/",
+        app: "http://128.255.84.48:3001/",
         Users: {
             controller: "users/",
             GetCurrentUsers: function() {
@@ -65,7 +68,8 @@ function DataService($http, Constants, CommonFactory) {
                 return data.data;
             },
             FailedInService: function() {
-                Notification.ShowNotification(true, Constants.Miscellaneous.SomethingWentWrong, Constants.Miscellaneous.Notification.Type.Danger);
+                //Notification.ShowNotification(true, Constants.Miscellaneous.SomethingWentWrong, Constants.Miscellaneous.Notification.Type.Danger);
+                alert(Constants.Miscellaneous.SomethingWentWrong);
             }
         }
     }

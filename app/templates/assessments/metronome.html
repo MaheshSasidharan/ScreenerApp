@@ -13,7 +13,7 @@
     </div>    
     <form class="text-center" name="timeDuration" ng-show="me.oAudio.bShowResponseBox" novalidate ng-submit="timeDuration.$valid && me.Helper.TimeDurationSubmit()">
         <div>
-            <h3>How long do you think the progress bar was visible? Press and hold the button for the same amount of time.</h3>
+            <h3>Press and release the button for each cycle of the sound clip.</h3>
         </div>
         <button ng-class="{'buttonPressed': buttonPressed}" class="glass SC_ButtonPress"
             ng-mousedown="buttonPressed = true; me.Helper.RecordTimeDuration('start');" ng-mouseup="buttonPressed = false; me.Helper.RecordTimeDuration('stop');">
