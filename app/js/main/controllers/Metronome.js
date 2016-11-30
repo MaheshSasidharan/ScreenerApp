@@ -6,23 +6,15 @@ function Metronome($scope, $timeout, $interval, Constants, CommonFactory, DataSe
 
     var timeDuration = 4; //Constants.AudioAssessment.audioRecordLength;
 
-    var playing = false,
-        channelCount = 2,
-        amount = 0.50,
-        sampler,
-        osc,
-        device,
-        reverb,
-        delay,
-        distortion,
-        lowPass,
-        firstTime = true;
+    var playing = false;
+    var firstTime = true;
 
     me.oMetronome = {
         arrTimeIntervalsStartStop: [],
         counter: 5,
         start: null,
-        end: null
+        end: null,
+        intervalBetweenStarts: null
     }
 
     me.oAudio = {
@@ -74,28 +66,35 @@ function Metronome($scope, $timeout, $interval, Constants, CommonFactory, DataSe
         RecordTimeDuration: function(sType) {
             switch (sType) {
                 case 'start':
-                    me.oMetronome.start = new Date();
+                    if (me.oMetronome.start === null) {
+                        me.oMetronome.intervalBetweenStarts = 0;
+                        me.oMetronome.start = new Date();
+                    }else{
+                        me.oMetronome.intervalBetweenStarts = new Date() - me.oMetronome.start;
+                        me.oMetronome.start = new Date();
+                    }                    
                     break;
                 case 'stop':
                     me.oMetronome.end = new Date();
                     var oIntervals = {
                         start: me.oMetronome.start,
                         end: me.oMetronome.end,
-                        interval: me.oMetronome.end - me.oMetronome.start
+                        intervalBetweenStartEnd: me.oMetronome.end - me.oMetronome.start,
+                        intervalBetweenStarts: me.oMetronome.intervalBetweenStarts
                     }
-                    me.oMetronome.arrTimeIntervalsStartStop.push(oIntervals);                    
+                    me.oMetronome.arrTimeIntervalsStartStop.push(oIntervals);
                     console.log(oIntervals);
 
-                    if(--me.oMetronome.counter === 0){
+                    if (--me.oMetronome.counter === 0) {
                         var oFinalResponse = {
                             initializedTime: me.oMetronome.initializedTime,
                             arrTimeIntervalsStartStop: me.oMetronome.arrTimeIntervalsStartStop
                         }
                         me.oAudio.bShowResponseBox = false;
                         console.log(oFinalResponse);
-                        $scope.$parent.vm.currentAssessment.arrQuestions[0].response = JSON.stringify(oFinalResponse);                        
+                        $scope.$parent.vm.currentAssessment.arrQuestions[0].response = JSON.stringify(oFinalResponse);
                         $scope.$parent.vm.Helper.ShowHidePager(true, Constants.Miscellaneous.AssessmentCompleteNext);
-                        
+
                         playing = false;
                     }
 
@@ -104,10 +103,61 @@ function Metronome($scope, $timeout, $interval, Constants, CommonFactory, DataSe
         }
     }
 
-    //me.Helper.PlayPause();
-    //me.InitMetronome = function() {
+    var mySample = atob(thatsright);
 
-    var audioCallback = function(buffer, channels) {
+    var tempo = 120,
+        notesPerBeat = 4,
+        tickCounter = 1,
+        tick = 0,
+        dev, sampler;
+
+    function audioCallback(buffer, channelCount) {
+        // Fill the buffer with the sampler output
+        if (playing) {
+            sampler.append(buffer, channelCount);
+        }
+    }
+
+    //window.addEventListener('load', function(){
+    me.Play = function() {
+        // Create an instance of the AudioDevice class
+        dev = audioLib.AudioDevice(audioCallback /* callback for the buffer fills */ , 2 /* channelCount */ );
+        // Create an instance  of the Sampler class
+        sampler = audioLib.Sampler(dev.sampleRate);
+        // Load the sample to the sampler
+        sampler.loadWav(mySample, true);
+
+        // The addPreProcessing() method is called before .generate()
+        sampler.addPreProcessing(function() {
+            // Make tickCounter approach 1, and trigger sample when reached
+            tickCounter = tickCounter + 1 / dev.sampleRate * tempo / 60;
+
+            if (tickCounter >= 1) {
+                tickCounter = 0;
+                // Trigger the sample at e if first note, otherwise at a
+                this.noteOn(tick ? 440 : 660);
+                tick = (tick + 1) % notesPerBeat;
+            }
+        });
+    }
+}
+//me.Helper.PlayPause();
+//me.InitMetronome = function() {
+/*
+
+    var playing = false,
+        channelCount = 2,
+        amount = 0.50,
+        sampler,
+        osc,
+        device,
+        reverb,
+        delay,
+        distortion,
+        lowPass,
+        firstTime = true;
+
+    var audioCallback_1 = function(buffer, channels) {
         var length = buffer.length,
             index,
             sample,
@@ -177,7 +227,7 @@ function Metronome($scope, $timeout, $interval, Constants, CommonFactory, DataSe
         amount = 0.50;
     }
 
-    me.Play = function() {
+    me.Play_1 = function() {
 
         device = audioLib.AudioDevice(audioCallback, channelCount);
         osc = audioLib.Oscillator(device.sampleRate, 400);
@@ -206,7 +256,15 @@ function Metronome($scope, $timeout, $interval, Constants, CommonFactory, DataSe
         setUpUI();
 
     }
-}
+
+    */
+/****************************/
+
+//}, true);
+/****************************/
+
+
+
 
 //window.addEventListener('load', , true);
 /*
