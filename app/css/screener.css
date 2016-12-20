@@ -35,14 +35,17 @@
 
 .SC_audioContainer {
     padding: 1px 20px;
-    text-align: center;;
+    text-align: center;
+    ;
 }
 
 .SC_assessmentInnerContainer {
     padding: 20px
 }
 
+
 /* Time Duration */
+
 .progress-bar {
     -webkit-transition: width linear;
     -moz-transition: width linear;
@@ -51,9 +54,21 @@
     transition: width linear;
 }
 
+.progress-bar {
+    -webkit-transition-duration: 2000ms !important;
+    -moz-transition-duration: 2000ms !important;
+    -ms-transition-duration: 2000ms !important;
+    -o-transition-duration: 2000ms !important;
+    transition-duration: 2000ms;
+    width: 0%;
+}
+
 
 /*Round Button hover effects*/
+
+
 /*Glass effect button*/
+
 .glass {
     background: red;
     background: linear-gradient(red, black);
@@ -73,9 +88,10 @@
     border-radius: 2px 2px 0px 0px;
 }
 
+
 /*End of glass*/
 
-.SC_ButtonPress{
+.SC_ButtonPress {
     height: 200px;
     width: 200px;
     border-radius: 50%;
@@ -84,19 +100,19 @@
     transition: all linear 100ms;
 }
 
-.SC_ButtonPress.buttonPressed{
-    background: linear-gradient(red, red);    
+.SC_ButtonPress.buttonPressed {
+    background: linear-gradient(red, red);
 }
 
-.SC_ButtonPress.buttonPressed{
-    height:195px;
-    width: 195px;  
+.SC_ButtonPress.buttonPressed {
+    height: 195px;
+    width: 195px;
     margin-top: 5px;
 }
 
 .SC_ButtonPress.glass:after {
     height: 100%;
-    box-shadow: inset -20px -20px 96px rgba(128,0,0, 1);
+    box-shadow: inset -20px -20px 96px rgba(128, 0, 0, 1);
     top: 0;
     left: 0;
     border-radius: 50%;
@@ -104,6 +120,8 @@
 }
 
 .SC_ButtonPress.glass.buttonPressed:after {
-    box-shadow: inset -15px -5px 96px rgba(128,0,0, 1);    
+    box-shadow: inset -15px -5px 96px rgba(128, 0, 0, 1);
 }
+
+
 /* End TD*/

@@ -53,13 +53,64 @@ function TimeDuration($scope, $timeout, $interval, Constants, CommonFactory, Dat
                     that.bShowResponseBox = true;
                 }, that.nMaxTime);
             }, 0);
+        },
+        StartCircularProgressBarNew: function() {
+            this.bShowStartButton = false;
+            this.bShowProgressBar = true;
+            this.nSpentTime = 0;
+            var that = this;
+
+
+
+            
+            $timeout(function() {
+                that.nSpentTime = that.nMaxTime;
+
+                
+                // angular.element(document.querySelectorAll('div.co-circle-progress > div.co-circle, div.co-circle-progress div.co-fill'))
+                // .css({
+                //     '-webkit-transition-duration': td.oAudio.nMaxTime + 'ms',
+                //     '-moz-transition-duration': td.oAudio.nMaxTime + 'ms',
+                //     '-ms-transition-duration': td.oAudio.nMaxTime + 'ms',
+                //     '-o-transition-duration': td.oAudio.nMaxTime + 'ms',
+                //     'transition-duration': td.oAudio.nMaxTime + 'ms'
+                // });
+                
+
+                /*
+                angular.element(document.querySelector('div.co-circle-progress > div.co-circle'))
+                .css({
+                    '-webkit-transition-duration': td.oAudio.nMaxTime + 'ms',
+                    '-moz-transition-duration': td.oAudio.nMaxTime + 'ms',
+                    '-ms-transition-duration': td.oAudio.nMaxTime + 'ms',
+                    '-o-transition-duration': td.oAudio.nMaxTime + 'ms',
+                    'transition-duration': td.oAudio.nMaxTime + 'ms'
+                });
+                */
+
+                angular.element(document.querySelectorAll('div.co-circle-progress > div.co-circle, div.co-circle-progress div.co-fill'))
+                .css({
+                    '-webkit-transition': 'transform ' + td.oAudio.nMaxTime + 'ms linear',
+                    '-moz-transition': 'transform ' + td.oAudio.nMaxTime + 'ms linear',
+                    '-ms-transition': 'transform ' + td.oAudio.nMaxTime + 'ms linear',
+                    '-o-transition': 'transform ' + td.oAudio.nMaxTime + 'ms linear',
+                    'transition': 'transform ' + td.oAudio.nMaxTime + 'ms linear'
+                });
+
+                $timeout(function() {
+                    that.nSpentTime = 0;
+                    that.bShowProgressBar = false;
+                    that.bShowResponseBox = true;
+                }, that.nMaxTime);
+            }, 0);
         }
     }
 
 
     td.Helper = {
         Next: function() {
-            td.oAudio.StartProgressBarNew();
+            //td.oAudio.StartProgressBarNew();
+            td.oAudio.StartCircularProgressBarNew();
         },
         RecordTimeDuration: function(sType) {
             switch (sType) {
