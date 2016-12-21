@@ -7,17 +7,19 @@
     <div class="text-center" ng-show="td.oAudio.bShowStartButton">
         <button type="submit" class="btn btn-primary" ng-click="td.Helper.Next()">Start</button>
     </div>
-    <div class="text-center">
-        <uib-progressbar class="progress-striped_1 active_1" max="td.oAudio.nMaxTime" value="td.oAudio.nSpentTime" type="{{td.oAudio.sType}}" ng-show="td.oAudio.bShowProgressBar"></uib-progressbar>
+    <div class="text-center" ng-show="false">
+        <!-- <uib-progressbar class="progress-striped_1 active_1" max="td.oAudio.nMaxTime" value="td.oAudio.nSpentTime" type="{{td.oAudio.sType}}"></uib-progressbar> -->
+        <orbicular ng-if="td.oAudio.bShowProgressBar" progression="100" total="100" resize counterclockwise></orbicular>
         <button class="btn btn-md btn-success" ng-click="td.Helper.PlayNext('next')" ng-show="td.oAudio.bShowPlayButton">{{au.sTextOnPlayButton}}</button>
-    </div>    
+    </div>
+    <div id="assess_circle">
+        <button ng-show="td.oAudio.bShowProgressBar" ng-disabled="!td.oAudio.bShowResponseBox" ng-class="{'buttonPressed': buttonPressed, 'disabledButton': !td.oAudio.bShowResponseBox}" class="glass SC_ButtonPress" ng-mousedown="buttonPressed = dtrue; dtd.Helper.RecordTimeDuration('start');" ng-mouseup="dbuttonPressed = false; dtd.Helper.RecordTimeDuration('stop');">
+            &nbsp;
+        </button>
+    </div>
     <form class="text-center" name="timeDuration" ng-show="td.oAudio.bShowResponseBox" novalidate ng-submit="timeDuration.$valid && td.Helper.TimeDurationSubmit()">
         <div>
             <h3>How long do you think the progress bar was visible? Press and hold the button for the same amount of time.</h3>
         </div>
-        <button ng-class="{'buttonPressed': buttonPressed}" class="glass SC_ButtonPress"
-            ng-mousedown="buttonPressed = true; td.Helper.RecordTimeDuration('start');" ng-mouseup="buttonPressed = false; td.Helper.RecordTimeDuration('stop');">
-                &nbsp;
-        </button>
     </form>
 </div>

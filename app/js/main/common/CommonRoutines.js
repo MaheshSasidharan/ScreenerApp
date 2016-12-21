@@ -1,8 +1,9 @@
-﻿app.factory('Factory_CommonRoutines', [CommonRoutines])
+﻿app.factory('Factory_CommonRoutines', ['Notification', CommonRoutines])
 
-function CommonRoutines() {
+function CommonRoutines(Notification) {
 
     var oCommonRoutine = {
+        Notification: Notification,
         FindItemInArray: function(array, keyName, keyVal, returnType) {
             var found = false;
             if (undefined === keyVal || null === keyVal) {
@@ -199,25 +200,6 @@ function CommonRoutines() {
                         }
 
                 }
-            }
-        },
-        Notification: {
-            sTitle: "",
-            bShow: false,
-            sType: "",
-            ShowNotification: function(bShow, sTitle, sType) {
-                this.HideNotification(); // Clear previous notification and show 
-                var that = this;
-                $timeout(function() {
-                    that.sTitle = sTitle;
-                    that.bShow = bShow;
-                    that.sType = sType;
-                }, 10);
-            },
-            HideNotification: function() {
-                this.sTitle = "";
-                this.bShow = false;
-                this.sType = "";
             }
         },
         Popup: {

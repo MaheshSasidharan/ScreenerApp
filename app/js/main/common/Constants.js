@@ -3,7 +3,8 @@
 function Constants() {
     var oConstants = {
         Miscellaneous: {
-            AssessmentCompleteNext: "You have completed this assessment. Click NEXT to continue."
+            AssessmentCompleteNext: "You have completed this assessment. Click NEXT to continue.",
+            SomethingWentWrong: "Sorry something went wrong"
         },
         Assessments: {
             arrDropDowns: {
@@ -70,7 +71,7 @@ function Constants() {
             audioRecordLength: 5, // seconds
             arrVoices: [
                 '1_1',
-                //'1_2',
+                '1_2',
                 //'1_3',
                 // '2_1',
                 // '2_2',

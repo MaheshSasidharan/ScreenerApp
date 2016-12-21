@@ -47,15 +47,17 @@ function AssessmentsCtrl($scope, $state, Constants, DataService, CommonFactory) 
                         return data;
                     }
                 });
-            }else{
+            } else {
                 return Promise.resolve();
             }
         },
         Init: function() {
             var that = this;
             vm.oService.GetAssessments().then(function(data) {
-                that.InitAssessments();
-                that.InitTab();
+                if (data.status) {
+                    that.InitAssessments();
+                    that.InitTab();
+                }
             });
         },
         TransitionState: function(state) {
@@ -124,7 +126,7 @@ function AssessmentsCtrl($scope, $state, Constants, DataService, CommonFactory) 
         GetTemplateURL: function(sPartialURL) {
             return '' + sPartialURL + '';
         },
-        ShowHidePager: function(bShow, sMessage){
+        ShowHidePager: function(bShow, sMessage) {
             vm.bShowPager = bShow;
             vm.sShowPagerMessage = sMessage;
         }

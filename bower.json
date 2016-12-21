@@ -6,7 +6,8 @@
   "dependencies": {
     "angular": "~1.5.8",
     "angular-ui-router": "~0.2.14",
-    "webcam-directive": "latest"
+    "webcam-directive": "latest",
+    "orbicular": "~3.0.0"
   },
   "resolutions": {
     "angular": "~1.5.8"
