@@ -1,23 +1,22 @@
-app.controller('AudioController', ['$scope', '$timeout', '$interval', '$sce', 'Factory_Constants', 'Factory_CommonRoutines', 'Factory_DataService', AudioController]);
+app.controller('SyncVoice', ['$scope', '$timeout', '$interval', 'Factory_Constants', 'Factory_CommonRoutines', 'Factory_DataService', SyncVoice]);
 
-function AudioController($scope, $timeout, $interval, $sce, Constants, CommonFactory, DataService, Upload) {
-    var au = this;
+function SyncVoice($scope, $timeout, $interval, Constants, CommonFactory, DataService) {
+    var sv = this;
     var bFirst = true;
 
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
     var context = new AudioContext();
     var source = context.createBufferSource(); // creates a sound source
 
-    au.sTextOnPlayButton = "Start Practice";
+    sv.sTextOnPlayButton = "Start Practice";
+    sv.audioIndex = -1;
+    sv.arrVoiceOPAndIP = [];
+    sv.audioRecordLength = Constants.SyncVoiceAssessment.audioRecordLength;
 
-    au.audioIndex = -1;
-    au.arrVoiceOPAndIP = [];
-    au.audioRecordLength = Constants.AudioAssessment.audioRecordLength;
-
-    au.oAudio = {
-        bShowStartButton: true,
+    sv.oAudio = {
+        bShowStartButton: false,
         bShowProgressBar: false,
-        nMaxTime: au.audioRecordLength * 1000,
+        nMaxTime: sv.audioRecordLength * 1000,
         nSpentTime: 0,
         nRefreshRate: 500,
         sType: null,
@@ -35,13 +34,13 @@ function AudioController($scope, $timeout, $interval, $sce, Constants, CommonFac
                         // Give a gap of 1 second
                         that.nSpentTime = 0;
                         that.bShowProgressBar = false;
-                        //au.oAudio.bShowStartButton = true;
-                        if (au.arrVoiceOPAndIP.length - 1 !== au.audioIndex) {
-                            au.oAudio.bShowStartButton = true;
+                        //sv.oAudio.bShowStartButton = true;
+
+                        if (sv.arrVoiceOPAndIP.length - 1 !== sv.audioIndex) {
+                            sv.oAudio.bShowStartButton = true;
                             $scope.$parent.vm.currentAssessment.arrQuestions[0].sMode = "Final";
-                            //au.sTextOnPlayButton = "Next audio";
-                        } else if (au.arrVoiceOPAndIP.length - 1 == au.audioIndex) {
-                            au.oAudio.bShowStartButton = false;
+                        } else if (sv.arrVoiceOPAndIP.length - 1 == sv.audioIndex) {
+                            sv.oAudio.bShowStartButton = false;
                             $scope.$parent.vm.Helper.ShowHidePager(true, Constants.Miscellaneous.AssessmentCompleteNext);
                         }
                     }, 1000);
@@ -53,23 +52,24 @@ function AudioController($scope, $timeout, $interval, $sce, Constants, CommonFac
         }
     }
 
-    au.oAudioRecorder = {
+    sv.oAudioRecorder = {
         recorded: null,
-        timeLimit: au.audioRecordLength,
+        timeLimit: sv.audioRecordLength,
         autoStart: false,
         StartRecorderCountDown: function() {
             var nTimer = 3;
-            au.oAudio.displayedResponse = nTimer;
+            sv.oAudio.displayedResponse = nTimer;
             $scope.$apply();
             var oIntervalPromise = $interval(function() {
                 if (nTimer == 0) {
-                    au.oAudioRecorder.recorded = null;
-                    au.oAudio.displayedResponse = null;
-                    au.oAudio.StartProgressBar();
-                    au.oAudioRecorder.autoStart = true;
+                //if (nTimer == 3) {
+                    sv.oAudioRecorder.recorded = null;
+                    sv.oAudio.displayedResponse = null;
+                    sv.oAudio.StartProgressBar();
+                    sv.oAudioRecorder.autoStart = true;
                     $interval.cancel(oIntervalPromise);
                 } else {
-                    au.oAudio.displayedResponse = --nTimer;
+                    sv.oAudio.displayedResponse = --nTimer;
                 }
             }, 1000, 4);
         },
@@ -79,51 +79,51 @@ function AudioController($scope, $timeout, $interval, $sce, Constants, CommonFac
         OnRecordAndConversionComplete: function() {
             console.log("RECORDING Ended");
             $timeout(function() {
-                //console.log(au.oAudioRecorder.recorded);
-                //au.arrAudioToBeUploaded.push(au.oAudioRecorder.recorded);
-                au.oAudioRecorder.autoStart = false;
-                au.arrVoiceOPAndIP[au.audioIndex].oResponseVoice = au.oAudioRecorder.recorded;
-                au.arrVoiceOPAndIP[au.audioIndex].sStatus = 'responseAdded';
-                au.Helper.AudioUploadWord();
+                //console.log(sv.oAudioRecorder.recorded);
+                //sv.arrAudioToBeUploaded.push(sv.oAudioRecorder.recorded);
+                sv.oAudioRecorder.autoStart = false;
+                sv.arrVoiceOPAndIP[sv.audioIndex].oResponseVoice = sv.oAudioRecorder.recorded;
+                sv.arrVoiceOPAndIP[sv.audioIndex].sStatus = 'responseAdded';
+                sv.Helper.AudioSyncVoiceUpload();
             }, 0);
         }
     }
 
-    au.oService = {
-        AudioUploadWord: function(audioIndex) {
-            var oResponse = au.arrVoiceOPAndIP[audioIndex];
+    sv.oService = {
+        AudioSyncVoiceUpload: function(audioIndex) {
+            var oResponse = sv.arrVoiceOPAndIP[audioIndex];
             CommonFactory.BlobToBase64(oResponse.oResponseVoice, function(base64) { // encode
                 var oSaveItem = { 'blob': base64, 'sVoicePrefix': oResponse.sVoicePrefix };
-                DataService.AudioUploadWord(oSaveItem).then(function(data) {
+                DataService.AudioSyncVoiceUpload(oSaveItem).then(function(data) {
                     if (data.status) {
-                        au.arrVoiceOPAndIP[audioIndex].sStatus = 'saved';
+                        sv.arrVoiceOPAndIP[audioIndex].sStatus = 'saved';
                     } else {
-                        au.arrVoiceOPAndIP[audioIndex].sStatus = 'failed';
+                        sv.arrVoiceOPAndIP[audioIndex].sStatus = 'failed';
                     }
                 });
             });
         }
     }
 
-    au.Helper = {
+    sv.Helper = {
         PlayNext: function(sType) {
             if (sType == "next") {
-                if (au.arrVoiceOPAndIP.length - 1 !== au.audioIndex) {
-                    ++au.audioIndex;
-                    if (bFirst) {
-                        au.sTextOnPlayButton = "Start";
-                        bFirst = false;
-                    } else {
-                    // $scope.$parent.vm.currentAssessment.arrQuestions[0].sMode = "Final";
-                        au.sTextOnPlayButton = "Next Audio";
-                    }
+                if (sv.arrVoiceOPAndIP.length - 1 !== sv.audioIndex) {
+                    ++sv.audioIndex;
+                }
+                if (bFirst) {
+                    sv.sTextOnPlayButton = "Start";
+                    bFirst = false;
+                } else {
+                // $scope.$parent.vm.currentAssessment.arrQuestions[0].sMode = "Final";
+                    sv.sTextOnPlayButton = "Next";
                 }
             } else { // prev
-                if (au.audioIndex !== 0) {
-                    --au.audioIndex;
+                if (sv.audioIndex !== 0) {
+                    --sv.audioIndex;
                 }
             }
-            au.Helper.PlaySound(au.arrVoiceOPAndIP[au.audioIndex].oVoice);
+            sv.Helper.PlaySound(sv.arrVoiceOPAndIP[sv.audioIndex].oVoice);
         },
         PlaySound: function(buffer) {
             if (source.buffer) {
@@ -134,44 +134,45 @@ function AudioController($scope, $timeout, $interval, $sce, Constants, CommonFac
             source.buffer = buffer; // tell the source which sound to play
             source.connect(context.destination); // connect the source to the context's destination (the speakers)
             source.start(0); // play the source now
-            au.oAudio.bShowStartButton = false;
+            sv.oAudio.bShowStartButton = false;
         },
         EndOfAudioPlay: function() {
-            au.oAudioRecorder.StartRecorderCountDown();
+            sv.oAudioRecorder.StartRecorderCountDown();
         },
         FinishedLoadingAudio(arrBuffers) {
             arrBuffers.forEach(function(oVoice, i) {
-                au.arrVoiceOPAndIP[i].oVoice = oVoice;
-                au.arrVoiceOPAndIP[i].sStatus = 'voiceAdded';
+                sv.arrVoiceOPAndIP[i].oVoice = oVoice;
+                sv.arrVoiceOPAndIP[i].sStatus = 'voiceAdded';
             });
-            au.oAudio.bShowStartButton = true;
+            sv.oAudio.bShowStartButton = true;
             $scope.$apply();
         },
-        AudioUploadWord: function() {
-            var audioIndex = au.audioIndex;
-            au.oService.AudioUploadWord(audioIndex);
+        AudioSyncVoiceUpload: function() {
+            var audioIndex = sv.audioIndex;
+            sv.oService.AudioSyncVoiceUpload(audioIndex);
         },
         Init: function() {
             // Hide NextAssessment button
             $scope.$parent.vm.Helper.ShowHidePager(false);
             // Turn on practice mode
             $scope.$parent.vm.currentAssessment.arrQuestions[0].sMode = "Practice";
-            Constants.AudioAssessment.arrVoices.forEach(function(sVoicePrefix) {
+
+            Constants.SyncVoiceAssessment.arrVoices.forEach(function(sVoicePrefix) {
                 var oVoiceOPAndIP = {
                     sVoicePrefix: sVoicePrefix,
                     oVoice: null,
                     oResponseVoice: null,
                     sStatus: 'created'
                 }
-                au.arrVoiceOPAndIP.push(oVoiceOPAndIP);
+                sv.arrVoiceOPAndIP.push(oVoiceOPAndIP);
             });
             var bufferLoader = new BufferLoader(
-                context, Constants.AudioAssessment.arrVoices,
+                context, Constants.SyncVoiceAssessment.arrVoices,
                 this.FinishedLoadingAudio,
-                DataService.GetAudioAssessment
+                DataService.GetSyncVoiceAssessment
             );
             bufferLoader.load();
         },
     }
-    au.Helper.Init();
+    sv.Helper.Init();
 }

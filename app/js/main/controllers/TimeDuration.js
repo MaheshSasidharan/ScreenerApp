@@ -1,15 +1,15 @@
 app.controller('TimeDuration', ['$scope', '$timeout', '$interval', 'Factory_Constants', 'Factory_CommonRoutines', 'Factory_DataService', TimeDuration]);
 
 function TimeDuration($scope, $timeout, $interval, Constants, CommonFactory, DataService) {
-    $scope.$parent.vm.Helper.ShowHidePager(false);
     var td = this;
-    var timeDuration = 4; //Constants.AudioAssessment.audioRecordLength;
+    var bFirst = true;
+    var timeDuration = 0.2; //Constants.AudioAssessment.audioRecordLength;
+    var nCurrentRound = 0;
+    var nTotalRounds = 2;
+    var arrResponse = [];
 
-    var circle = new ProgressBar.Circle('#assess_circle', {
-        color: '#000',
-        duration: timeDuration * 1000,
-        easing: 'linear'
-    });
+    td.sTextOnPlayButton = "Start Practice";
+    var circle = null;
 
     td.oAudio = {
         bShowStartButton: true,
@@ -20,109 +20,60 @@ function TimeDuration($scope, $timeout, $interval, Constants, CommonFactory, Dat
         nRefreshRate: 500,
         sType: null,
         displayedResponse: null,
-        // StartProgressBar: function() {
-        //     this.bShowProgressBar = true;
-        //     this.sType = null;
-        //     var that = this;
-        //     oIntervalPromise = $interval(function() {
-        //         if (that.nSpentTime + that.nRefreshRate == that.nMaxTime) {
-        //             $interval.cancel(oIntervalPromise);
-        //             that.nSpentTime += that.nRefreshRate;
-        //             $timeout(function() {
-        //                 that.nSpentTime = 0;
-        //                 that.bShowProgressBar = false;
-        //             }, 1000);
-        //         } else {
-        //             that.nSpentTime += that.nRefreshRate;
-        //         }
-        //     }, this.nRefreshRate, this.nMaxTime / this.nRefreshRate);
-        // },
-        StartProgressBarNew: function() {
-            this.bShowStartButton = false;
-            this.bShowProgressBar = true;
-            this.nSpentTime = 0;
-            var that = this;
-            angular.element(document.querySelector('.SC_TimeDuration .progress-bar'))
-                .css({
-                    '-webkit-transition-duration': td.oAudio.nMaxTime + 'ms',
-                    '-moz-transition-duration': td.oAudio.nMaxTime + 'ms',
-                    '-ms-transition-duration': td.oAudio.nMaxTime + 'ms',
-                    '-o-transition-duration': td.oAudio.nMaxTime + 'ms',
-                    'transition-duration': td.oAudio.nMaxTime + 'ms'
-                });
-            $timeout(function() {
-                that.nSpentTime = that.nMaxTime;
-                $timeout(function() {
-                    that.nSpentTime = 0;
-                    that.bShowProgressBar = false;
-                    that.bShowResponseBox = true;
-                }, that.nMaxTime);
-            }, 0);
+        StartRecorderCountDown: function() {
+            var nTimer = 3;
+            td.displayedResponse = nTimer;
+            var oIntervalPromise = $interval(function() {
+                //if (nTimer == 0) {
+                if (nTimer == 3) {
+                    td.oAudio.StartCircularProgressBarNew();                    
+                    td.displayedResponse = null;                    
+                    $interval.cancel(oIntervalPromise);                    
+                } else {
+                    td.displayedResponse = --nTimer;
+                }
+            }, 1000, 4);
         },
-        StartCircularProgressBarNew: function() {
-            this.bShowStartButton = false;
+        StartCircularProgressBarNew: function() {            
             this.bShowProgressBar = true;
             this.nSpentTime = 0;
             var that = this;
-
             circle.animate(1);
-
             $timeout(function() {
                 that.nSpentTime = 0;
                 //that.bShowProgressBar = false;
                 that.bShowResponseBox = true;
             }, that.nMaxTime);
-            /*
-
-            $timeout(function() {
-                that.nSpentTime = that.nMaxTime;
-
-                
-                // angular.element(document.querySelectorAll('div.co-circle-progress > div.co-circle, div.co-circle-progress div.co-fill'))
-                // .css({
-                //     '-webkit-transition-duration': td.oAudio.nMaxTime + 'ms',
-                //     '-moz-transition-duration': td.oAudio.nMaxTime + 'ms',
-                //     '-ms-transition-duration': td.oAudio.nMaxTime + 'ms',
-                //     '-o-transition-duration': td.oAudio.nMaxTime + 'ms',
-                //     'transition-duration': td.oAudio.nMaxTime + 'ms'
-                // });
-                
-
-                /*
-                angular.element(document.querySelector('div.co-circle-progress > div.co-circle'))
-                .css({
-                    '-webkit-transition-duration': td.oAudio.nMaxTime + 'ms',
-                    '-moz-transition-duration': td.oAudio.nMaxTime + 'ms',
-                    '-ms-transition-duration': td.oAudio.nMaxTime + 'ms',
-                    '-o-transition-duration': td.oAudio.nMaxTime + 'ms',
-                    'transition-duration': td.oAudio.nMaxTime + 'ms'
-                });
-                */
-            /*
-                angular.element(document.querySelectorAll('div.co-circle-progress > div.co-circle, div.co-circle-progress div.co-fill'))
-                .css({
-                    '-webkit-transition': 'transform ' + td.oAudio.nMaxTime + 'ms linear',
-                    '-moz-transition': 'transform ' + td.oAudio.nMaxTime + 'ms linear',
-                    '-ms-transition': 'transform ' + td.oAudio.nMaxTime + 'ms linear',
-                    '-o-transition': 'transform ' + td.oAudio.nMaxTime + 'ms linear',
-                    'transition': 'transform ' + td.oAudio.nMaxTime + 'ms linear'
-                });
-                
-
-                $timeout(function() {
-                    that.nSpentTime = 0;
-                    that.bShowProgressBar = false;
-                    that.bShowResponseBox = true;
-                }, that.nMaxTime);
-            }, 0);
-            */
         }
     }
 
     td.Helper = {
-        Next: function() {
-            //td.oAudio.StartProgressBarNew();
-            td.oAudio.StartCircularProgressBarNew();
+        Init: function() {
+            // Hide NextAssessment button
+            $scope.$parent.vm.Helper.ShowHidePager(false);
+            // Turn on practice mode
+            $scope.$parent.vm.currentAssessment.arrQuestions[0].sMode = "Practice";
+            // Reset response
+            $scope.$parent.vm.currentAssessment.arrQuestions[0].response = null;
+            // Init the circle
+            circle = new ProgressBar.Circle('#assess_circle', {
+                color: '#000',
+                duration: timeDuration * 1000,
+                easing: 'linear'
+            });
+        },
+        PlayNext: function(sType) {
+            if (sType == "next") {
+                td.oAudio.bShowStartButton = false;
+                td.oAudio.StartRecorderCountDown();
+                if (bFirst) {
+                    td.sTextOnPlayButton = "Start";
+                    bFirst = false;
+                } else {
+                    $scope.$parent.vm.currentAssessment.arrQuestions[0].sMode = "Final";
+                    td.sTextOnPlayButton = "Next";
+                }
+            }
         },
         RecordTimeDuration: function(sType) {
             switch (sType) {
@@ -132,11 +83,25 @@ function TimeDuration($scope, $timeout, $interval, Constants, CommonFactory, Dat
                 case 'stop':
                     td.oAudio.bShowResponseBox = false;
                     td.oAudio.nResponseBoxValue = new Date() - td.oAudio.nResponseBoxValue;
-                    console.log(td.oAudio.nResponseBoxValue);
-                    $scope.$parent.vm.currentAssessment.arrQuestions[0].response = td.oAudio.nResponseBoxValue;
-                    $scope.$parent.vm.Helper.ShowHidePager(true, Constants.Miscellaneous.AssessmentCompleteNext);
+
+                    var oSaveObject = {
+                        sType: $scope.$parent.vm.currentAssessment.arrQuestions[0].sMode,
+                        response: td.oAudio.nResponseBoxValue,
+                        nCurrentRound: ++nCurrentRound
+                    }
+                    arrResponse.push(oSaveObject);
+                    if (nCurrentRound === nTotalRounds) {
+                        $scope.$parent.vm.currentAssessment.arrQuestions[0].response = JSON.stringify(arrResponse);
+                        $scope.$parent.vm.Helper.ShowHidePager(true, Constants.Miscellaneous.AssessmentCompleteNext);
+                    } else {
+                        td.oAudio.bShowProgressBar = false;
+                        circle.set(0);
+                        $scope.$parent.vm.currentAssessment.arrQuestions[0].sMode = "Final";
+                        td.oAudio.bShowStartButton = true;
+                    }
                     break;
             }
         }
     }
+    td.Helper.Init();
 }

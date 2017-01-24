@@ -109,8 +109,8 @@ function AssessmentsCtrl($scope, $state, Constants, DataService, CommonFactory) 
             delete vm.tempAssessments;
             // Individual formatting
             vm.assessments[0].arrQuestions[0].response = CommonFactory.TryConvertStringToDate(vm.assessments[0].arrQuestions[0].response);
-            vm.assessments[5].arrQuestions[0].response = CommonFactory.GetRandomCharacter();
-            vm.assessments[5].arrQuestions[0].displayedResponse = "---";
+            //vm.assessments[7].arrQuestions[0].response = CommonFactory.GetRandomCharacter();
+            vm.assessments[7].arrQuestions[0].displayedResponse = "---";
         },
         InitTab: function() {
             vm.assessments.forEach(function(oAssessment) {
@@ -129,7 +129,22 @@ function AssessmentsCtrl($scope, $state, Constants, DataService, CommonFactory) 
         ShowHidePager: function(bShow, sMessage) {
             vm.bShowPager = bShow;
             vm.sShowPagerMessage = sMessage;
+        },
+        HasGetUserMedia: function() {
+            return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
+                navigator.mozGetUserMedia || navigator.msGetUserMedia);
+        },
+        GetUserMedia: function() {
+            if (this.HasGetUserMedia()) {
+                navigator.webkitGetUserMedia({ audio: true, video: true }, function() {
+                    vm.Helper.Init();
+                }, function() {
+                    CommonFactory.Notification.error(Constants.Miscellaneous.FailedMediaAccess);                    
+                });
+            } else {
+                CommonFactory.Notification.error(Constants.Miscellaneous.NoBrowserSupport);
+            }
         }
     }
-    vm.Helper.Init();
+    vm.Helper.GetUserMedia();
 }

@@ -4,7 +4,9 @@ function Constants() {
     var oConstants = {
         Miscellaneous: {
             AssessmentCompleteNext: "You have completed this assessment. Click NEXT to continue.",
-            SomethingWentWrong: "Sorry something went wrong"
+            SomethingWentWrong: "Sorry something went wrong",
+            FailedMediaAccess: "Failed to get media access",
+            NoBrowserSupport: "Your browser does not support features required to take this assessment. Please upgrade to the latest browser versions of your choice."
         },
         Assessments: {
             arrDropDowns: {
@@ -64,14 +66,35 @@ function Constants() {
                 }, {
                     val: 'PostGraduate',
                     label: 'Post Graduate'
+                }],
+                MusicalAbility:[{
+                    val: 'NoTraining',
+                    label: 'I have never had any formal training in any kind of music'
+                },{
+                    val: 'SomeTraining',
+                    label: 'I have some musical training but don’t routinely play or sing'
+                },{
+                    val: 'FormalTraining',
+                    label: 'I can play an instrument, or have formal training in singing'
+                },{
+                    val: 'SingProfessionally',
+                    label: 'I play or sing professionally'
+                },{
+                    val: 'MusicMajor',
+                    label: 'I study music as a major'
+                },{
+                    val: 'TeachMusic',
+                    label: 'I teach music'
                 }]
             }
         },
         AudioAssessment: {
-            audioRecordLength: 5, // seconds
+            //audioRecordLength: 2, // seconds
+            audioRecordLength: 1, // seconds
             arrVoices: [
+                '1_0',
                 '1_1',
-                '1_2',
+                //'1_2',
                 //'1_3',
                 // '2_1',
                 // '2_2',
@@ -81,36 +104,23 @@ function Constants() {
                 // '3_3',
             ]
         },
-        MatrixReasoning: {
-            arrImages: [{
-                sSetNum: "set1",
-                oFrame: {
-                    nWidth: 2,
-                    nHeight: 3,
-                    sSetType: "frameSets",
-                    arrPicNames: [
-                        "1_square.png",
-                        "2_triangle.png",
-                        "1_square.png",
-                        "pentagon.png",
-                        "questionmark.png",
-                        "pentagon.png"
-                    ]
-                },
-                oSolution: {
-                    nWidth: 3,
-                    nHeight: 2,
-                    sSetType: "solutionSets",
-                    arrPicNames: [
-                        "circle.png",
-                        "pentagon.png",
-                        "1_square.png",
-                        "2_triangle.png",
-                        "circle.png",
-                        "pentagon.png"
-                    ]
-                }
-            }]
+        SyncVoiceAssessment: {
+            audioRecordLength: 1, // seconds
+            arrVoices: [
+                '1_0',
+                '1_1',
+                //'1_2',
+                //'1_3',
+                // '2_1',
+                // '2_2',
+                // '2_3',
+                // '3_1',
+                // '3_2',
+                // '3_3',
+            ]
+        },
+        PicturePrompt: {
+            audioRecordLength: 1,
         }
     }
     return oConstants;
