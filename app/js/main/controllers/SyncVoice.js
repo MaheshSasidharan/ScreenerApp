@@ -1,17 +1,20 @@
-app.controller('SyncVoice', ['$scope', '$timeout', '$interval', 'Factory_Constants', 'Factory_CommonRoutines', 'Factory_DataService', SyncVoice]);
+app.controller('SyncVoice', ['$scope', '$timeout', '$interval', 'Factory_Constants', 'Factory_CommonRoutines', 'Factory_DataService', 'recorderService', SyncVoice]);
 
-function SyncVoice($scope, $timeout, $interval, Constants, CommonFactory, DataService) {
+function SyncVoice($scope, $timeout, $interval, Constants, CommonFactory, DataService, recorderServiceProvider) {
+    //recorderServiceProvider.withResampling(16000);
     var sv = this;
     var bFirst = true;
 
-    window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    var context = new AudioContext();
+    // window.AudioContext = window.AudioContext || window.webkitAudioContext;
+    // var context = new AudioContext();
+    var context = DataService.oAudioContext;
     var source = context.createBufferSource(); // creates a sound source
 
     sv.sTextOnPlayButton = "Start Practice";
     sv.audioIndex = -1;
     sv.arrVoiceOPAndIP = [];
     sv.audioRecordLength = Constants.SyncVoiceAssessment.audioRecordLength;
+    var nBufferRecordLength = Constants.Assessments.nBufferRecordLength;
 
     sv.oAudio = {
         bShowStartButton: false,
@@ -54,33 +57,40 @@ function SyncVoice($scope, $timeout, $interval, Constants, CommonFactory, DataSe
 
     sv.oAudioRecorder = {
         recorded: null,
-        timeLimit: sv.audioRecordLength,
+        timeLimit: sv.audioRecordLength + nBufferRecordLength,
         autoStart: false,
+        bShowAudioRecorder: false,
         StartRecorderCountDown: function() {
             var nTimer = 3;
             sv.oAudio.displayedResponse = nTimer;
             $scope.$apply();
             var oIntervalPromise = $interval(function() {
                 if (nTimer == 0) {
-                //if (nTimer == 3) {
-                    sv.oAudioRecorder.recorded = null;
+                    //if (nTimer == 3) {                    
                     sv.oAudio.displayedResponse = null;
-                    sv.oAudio.StartProgressBar();
-                    sv.oAudioRecorder.autoStart = true;
+                    $timeout(function() {
+                        sv.oAudio.StartProgressBar();
+                    }, Constants.Assessments.ProgressStartDelay);                    
+                    sv.oAudioRecorder.bShowAudioRecorder = true;
                     $interval.cancel(oIntervalPromise);
+                } else if (nTimer == nBufferRecordLength) {
+                    sv.oAudioRecorder.recorded = null;
+                    sv.oAudioRecorder.autoStart = true;
+                    sv.oAudio.displayedResponse = --nTimer;
                 } else {
                     sv.oAudio.displayedResponse = --nTimer;
                 }
             }, 1000, 4);
         },
         OnRecordStart: function() {
-            console.log("RECORDING STARTED");
+            //console.log("RECORDING STARTED");            
         },
         OnRecordAndConversionComplete: function() {
-            console.log("RECORDING Ended");
+            //console.log("RECORDING Ended");
             $timeout(function() {
                 //console.log(sv.oAudioRecorder.recorded);
                 //sv.arrAudioToBeUploaded.push(sv.oAudioRecorder.recorded);
+                sv.oAudioRecorder.bShowAudioRecorder = false;
                 sv.oAudioRecorder.autoStart = false;
                 sv.arrVoiceOPAndIP[sv.audioIndex].oResponseVoice = sv.oAudioRecorder.recorded;
                 sv.arrVoiceOPAndIP[sv.audioIndex].sStatus = 'responseAdded';
@@ -115,7 +125,7 @@ function SyncVoice($scope, $timeout, $interval, Constants, CommonFactory, DataSe
                     sv.sTextOnPlayButton = "Start";
                     bFirst = false;
                 } else {
-                // $scope.$parent.vm.currentAssessment.arrQuestions[0].sMode = "Final";
+                    // $scope.$parent.vm.currentAssessment.arrQuestions[0].sMode = "Final";
                     sv.sTextOnPlayButton = "Next";
                 }
             } else { // prev

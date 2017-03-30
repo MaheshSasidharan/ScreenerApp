@@ -1,11 +1,26 @@
 /* app css stylesheet */
 
+@font-face {
+    font-family: "SC_RobotoFont";
+    src: url('font/Roboto-Light.ttf') format("truetype");
+}
+
 * {
     box-sizing: border-box;
 }
 
-*:focus{
+*:focus {
     outline: none;
+}
+
+body {
+    font-family: 'SC_RobotoFont', cursive;
+    font-size: 16px;
+}
+
+.row.NoMargin {
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .audioRecorderTimeElapsed {
@@ -54,4 +69,27 @@
 
 .MA_NextButton {
     margin: 5px;
+}
+
+
+/* Material Design Override*/
+.main md-input-container, .main md-datepicker {
+    margin: 0;
+    background-color: white;
+    color: black;
+    padding: 6px 12px;
+    width: 100%;
+}
+
+.main .md-datepicker-input-container{
+    width: 93.5%;
+}
+
+.main .md-errors-spacer {
+    display: none;
+}
+
+.main md-checkbox {
+    margin-left: 12px !important;
+    margin-top: 5px;
 }

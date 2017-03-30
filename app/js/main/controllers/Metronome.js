@@ -4,7 +4,6 @@ function Metronome($scope, $timeout, $interval, Constants, CommonFactory, DataSe
     var me = this;
     var bFirst = true;
     var firstTime = true; // audio context
-    var timeDuration = 4; //Constants.AudioAssessment.audioRecordLength;
     var nCurrentRound = 0;
     var nTotalRounds = 2;
     var arrResponse = [];
@@ -13,7 +12,7 @@ function Metronome($scope, $timeout, $interval, Constants, CommonFactory, DataSe
 
 
     me.sTextOnPlayButton = "Start Practice";
-    var nMetronomeClickCounter = 5;
+    var nMetronomeClickCounter = Constants.MetronomeAssessment.totalClicks;
 
     me.oMetronome = {
         arrTimeIntervalsStartStop: [],
@@ -27,8 +26,6 @@ function Metronome($scope, $timeout, $interval, Constants, CommonFactory, DataSe
         bShowStartButton: true,
         bShowResponseBox: false,
         bShowProgressBar: false,
-
-        nMaxTime: timeDuration * 1000,
         nRefreshRate: 500,
         sType: null,
         displayedResponse: null,
@@ -36,11 +33,18 @@ function Metronome($scope, $timeout, $interval, Constants, CommonFactory, DataSe
             var nTimer = 3;
             me.displayedResponse = nTimer;
             var oIntervalPromise = $interval(function() {
-                //if (nTimer == 0) {
-                    if (nTimer == 3) {
-                    me.Helper.PlayPause();
+                if (nTimer == 0) {
+                //if (nTimer == 3) {
+                    //me.Helper.PlayPause();
                     me.displayedResponse = null;
                     $interval.cancel(oIntervalPromise);
+                    playing = !playing;
+                    me.Helper.PlayPause();
+                    $timeout(function() {
+                        playing = !playing;
+                        me.oAudio.bShowResponseBox = true;
+                        me.oMetronome.initializedTime = new Date();                        
+                    }, 5000);
                 } else {
                     me.displayedResponse = --nTimer;
                 }
@@ -61,11 +65,6 @@ function Metronome($scope, $timeout, $interval, Constants, CommonFactory, DataSe
             $scope.$parent.vm.currentAssessment.arrQuestions[0].response = null;
         },
         PlayPause: function() {
-            playing = !playing;
-            
-            me.oAudio.bShowResponseBox = true;
-            me.oMetronome.initializedTime = new Date();
-
             if (firstTime) {
                 me.Play();
                 firstTime = false;

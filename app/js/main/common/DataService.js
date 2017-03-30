@@ -6,6 +6,7 @@ function DataService($http, Constants, CommonFactory) {
         //app: "http://localhost:3000/",
         //app: "http://localhost:6001/",
         //app: "http://128.255.84.48:3001/",
+        /* #ServerAddress */
         app: "https://128.255.84.48:3001/",
         Users: {
             controller: "users/",
@@ -42,12 +43,12 @@ function DataService($http, Constants, CommonFactory) {
                         Helper.Miscellaneous.ReturnDataDotData,
                         Helper.Miscellaneous.FailedInService)
             },
-            // GetAudioAssessment: function(nAssmntNum) {
-            //     return $http.get(Helper.app + Helper.Assessments.controller + 'GetAudioAssessment?nAssmntNum=' + nAssmntNum, { responseType: "blob" })
-            //         .then(
-            //             Helper.Miscellaneous.ReturnDataDotData,
-            //             Helper.Miscellaneous.FailedInService)
-            // },
+            ReadingUpload: function(oSaveItem) {
+                return $http.post(Helper.app + Helper.Assessments.controller + 'ReadingUpload', { oSaveItem: oSaveItem })
+                    .then(
+                        Helper.Miscellaneous.ReturnDataDotData,
+                        Helper.Miscellaneous.FailedInService)
+            },
             GetAudioAssessment: function(nAssmntNum) {
                 return $http.get(Helper.app + Helper.Assessments.controller + 'GetAudioAssessment?nAssmntNum=' + nAssmntNum, { responseType: "arraybuffer" })
                     .then(
@@ -86,7 +87,13 @@ function DataService($http, Constants, CommonFactory) {
                     .then(
                         Helper.Miscellaneous.ReturnDataDotData,
                         Helper.Miscellaneous.FailedInService)
-            }
+            },
+            GetSetupAudio: function(nAssmntNum) {
+                return $http.get(Helper.app + Helper.Assessments.controller + 'GetSetupAudio?nAssmntNum=' + nAssmntNum, { responseType: "arraybuffer" })
+                    .then(
+                        Helper.Miscellaneous.ReturnDataDotData,
+                        Helper.Miscellaneous.FailedInService)
+            },
         },
         Miscellaneous: {
             ReturnDataDotData: function(data) {
@@ -96,7 +103,17 @@ function DataService($http, Constants, CommonFactory) {
                 console.log(err);
                 CommonFactory.Notification.error(Constants.Miscellaneous.SomethingWentWrong);
                 return { status: false };
-            }
+            },
+            bAssessmentsCompleted: false,
+            isMobileDevice: false,
+            oSetUpIssues: {
+                bHasMicrophoneIssue: false,
+                bHasSpeakerIssue: false,
+                bHasSetupIssue: function(){
+                    return (this.bHasMicrophoneIssue || this.bHasSpeakerIssue);
+                }
+            },
+            oAudioContext: null
         }
     }
 
@@ -112,7 +129,13 @@ function DataService($http, Constants, CommonFactory) {
         AudioPicturePromptVoiceUpload: Helper.Assessments.AudioPicturePromptVoiceUpload,
         GetSourceAddress: Helper.Assessments.GetSourceAddress,
         GetPicNamesMatrixAssessment: Helper.Assessments.GetPicNamesMatrixAssessment,
-        GetPicNamesPicturePrompt: Helper.Assessments.GetPicNamesPicturePrompt
+        GetPicNamesPicturePrompt: Helper.Assessments.GetPicNamesPicturePrompt,
+        ReadingUpload: Helper.Assessments.ReadingUpload,
+        GetSetupAudio: Helper.Assessments.GetSetupAudio,
+        bAssessmentsCompleted: Helper.Miscellaneous.bAssessmentsCompleted,
+        isMobileDevice: Helper.Miscellaneous.isMobileDevice,
+        oSetUpIssues: Helper.Miscellaneous.oSetUpIssues,
+        oAudioContext: Helper.Miscellaneous.oAudioContext        
     }
     return oService;
 }

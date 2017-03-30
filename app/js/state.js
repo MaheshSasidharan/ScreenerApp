@@ -17,13 +17,19 @@ app.config(['$stateProvider','$urlRouterProvider', function($stateProvider,$urlR
       templateUrl: 'templates/main/contact.tpl.html',
       controller: 'ContactCtrl as vm'
     })
+    .state('screener.setup', {
+      url: '/setup',
+      templateUrl: 'templates/main/setup.tpl.html',
+      controller: 'SetupCtrl as se'
+    })
     .state('screener.assessments', {
       url: '/assessments',
       templateUrl: 'templates/assessments/assessments.html',
       controller: 'AssessmentsCtrl as vm'
     })
             .state('screener.assessments.text', {
-              templateUrl: 'templates/assessments/text.html'
+              templateUrl: 'templates/assessments/text.html',
+              controller: 'TextInformation as ti'
             })
             .state('screener.assessments.timeDuration', {
               templateUrl: 'templates/assessments/timeDuration.html',
@@ -45,17 +51,25 @@ app.config(['$stateProvider','$urlRouterProvider', function($stateProvider,$urlR
               templateUrl: 'templates/assessments/matrixReasoning.html',
               controller: 'MatrixController as ma'
             })
-            .state('screener.assessments.audioWords', {
-              templateUrl: 'templates/assessments/audioWords.html',
-              controller: 'AudioController as au'
+            .state('screener.assessments.sentenceRepetition', {
+              templateUrl: 'templates/assessments/sentenceRepetition.html',
+              controller: 'SentenceRepetitionController as au'
             })
-            .state('screener.assessments.voice', {
-              templateUrl: 'templates/assessments/voice.html',
-              controller: 'VoiceController as vo'
+            .state('screener.assessments.wordFinding', {
+              templateUrl: 'templates/assessments/wordFinding.html',
+              controller: 'WordFindingController as wo'
             })
-            .state('screener.assessments.video', {
-              templateUrl: 'templates/assessments/video.html',
-              controller: 'VideoCtrl as vid'
+            .state('screener.assessments.reading', {
+              templateUrl: 'templates/assessments/reading.html',
+              controller: 'ReadingController as re'
+            })
+            .state('screener.assessments.personal', {
+              templateUrl: 'templates/assessments/personal.html',
+              controller: 'PersonalController as pe'
             });
+            // .state('screener.assessments.video', {
+            //   templateUrl: 'templates/assessments/video.html',
+            //   controller: 'VideoCtrl as vid'
+            // });
     $urlRouterProvider.otherwise('/home');
 }]);

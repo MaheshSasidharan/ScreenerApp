@@ -1,5 +1,6 @@
-var app = angular.module('app', ['ui.router', 'webcam', 'ui.bootstrap', 'angularAudioRecorder', 'ui-notification', 'Orbicular']);
-//var app = angular.module('app', ['ui.router', 'webcam']);
+// var app = angular.module('app', ['ui.router', 'webcam', 'ui.bootstrap', 'angularAudioRecorder', 'ui-notification', 'Orbicular']);
+var app = angular.module('app', ['ngAnimate', 'ui.router', 'webcam', 'ui.bootstrap', 'angularAudioRecorder', 'ui-notification', 'Orbicular', 'ngMaterial', 'ngMessages', 'material.svgAssetsCache']);
+
 
 app
     .config(function(NotificationProvider) {
@@ -9,8 +10,8 @@ app
             startRight: 10,
             verticalSpacing: 20,
             horizontalSpacing: 20,
-            positionX: 'left',
-            positionY: 'bottom'
+            positionX: 'right',
+            positionY: 'top'
         });
     })
 
@@ -21,6 +22,27 @@ app
     }
 ])
 
+.config(function($mdDateLocaleProvider) {
+    $mdDateLocaleProvider.formatDate = function(date) {
+        var day = date.getDate();
+        var monthIndex = date.getMonth();
+        var year = date.getFullYear();
+
+        return day + '/' + (monthIndex + 1) + '/' + year;
+
+    };
+})
+
+.config(['$mdAriaProvider', function($mdAriaProvider) {
+    $mdAriaProvider.disableWarnings();
+}])
+
+.config(function($mdThemingProvider) {
+  $mdThemingProvider.theme('default')
+    .primaryPalette('blue')
+    .accentPalette('teal');
+})
+
 .config(['recorderServiceProvider', function(recorderServiceProvider) {
-    //configure here
+    recorderServiceProvider.withResampling(16000);
 }]);

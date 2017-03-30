@@ -4,7 +4,7 @@ function AssessmentsCtrl($scope, $state, Constants, DataService, CommonFactory) 
     var vm = this;
     vm.tabs = [];
     vm.sShowPagerMessage = null;
-    vm.bShowPager = true;
+    vm.bShowPager = false;
     vm.currentTabIndex = 0;
     vm.currentTab = [];
     vm.tempAssessments = [];
@@ -51,18 +51,9 @@ function AssessmentsCtrl($scope, $state, Constants, DataService, CommonFactory) 
                 return Promise.resolve();
             }
         },
-        Init: function() {
-            var that = this;
-            vm.oService.GetAssessments().then(function(data) {
-                if (data.status) {
-                    that.InitAssessments();
-                    that.InitTab();
-                }
-            });
-        },
         TransitionState: function(state) {
             if (state) {
-                $state.transitionTo('screener.assessments.' + state);
+                $state.transitionTo('screener.' + state);
             }
         },
         PreviousAssessment: function() {
@@ -72,15 +63,74 @@ function AssessmentsCtrl($scope, $state, Constants, DataService, CommonFactory) 
                 that.InitCurrentTab();
             });
         },
-        NextAssessment: function() {
+        NextAssessment: function(bGoNext) {
             var that = this;
             vm.Helper.SaveAssessments().then(function() {
-                vm.currentTabIndex++;
-                that.InitCurrentTab();
+                if (bGoNext) {
+                    vm.currentTabIndex++;
+                    that.InitCurrentTab();
+                } else { // If assessment is completed
+                    DataService.bAssessmentsCompleted = true;
+                    that.TransitionState('home');
+                }
             });
         },
+        GetTemplateURL: function(sPartialURL) {
+            return '' + sPartialURL + '';
+        },
+        HasGetUserMedia: function() {
+            return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
+                navigator.mozGetUserMedia || navigator.msGetUserMedia);
+        },
+        GetUserMedia: function() {
+            if (this.HasGetUserMedia()) {
+                // Check if phone is being used
+                DataService.isMobileDevice = navigator.userAgent.match(/iPad|iPhone|iPod|android/i) != null || screen.width <= 480;
+
+                if (DataService.isMobileDevice || DataService.oSetUpIssues.bHasSetupIssue()) {
+                    vm.Helper.Init();
+                    return;
+                }
+                navigator.webkitGetUserMedia({ audio: true, video: true }, function() {
+                    vm.Helper.Init();
+                }, function() {
+                    CommonFactory.Notification.error({ message: Constants.Miscellaneous.FailedMediaAccess, delay: null });
+                });
+            } else {
+                CommonFactory.Notification.error({ message: Constants.Miscellaneous.NoBrowserSupport, delay: null });
+            }
+        },
+        Init: function() {
+            // This is just to check if client has completed assessment. This does not need a page refresh
+            if (DataService.bAssessmentsCompleted) {
+                this.TransitionState('home');
+            } else {
+                var that = this;
+                vm.oService.GetAssessments().then(function(data) {
+                    if (data.status) {
+                        if (that.InitAssessments()) {                            
+                            that.InitTab();
+                            if (DataService.isMobileDevice || DataService.oSetUpIssues.bHasSetupIssue()) {
+                                that.InitPersonalTab();
+                            }
+                            that.InitCurrentTab();
+                            that.ShowHidePager(true, null);
+                        }
+                    }
+                });
+            }
+        },
         InitAssessments: function() {
+            var bItemToBeAssessedFound = false;
             vm.tempAssessments.forEach(function(oItem) {
+                // This is to find, which assessment has already been completed
+                /*
+                if (!bItemToBeAssessedFound && oItem.responseTextId === undefined) { // If responseTextId property is not present, then that one has not been assessed
+                    bItemToBeAssessedFound = true;
+                    vm.currentTabIndex = vm.assessments.length;
+                }
+                */
+
                 var assessmentIndex = CommonFactory.FindItemInArray(vm.assessments, 'assessmentId', oItem.assessmentId, 'index');
                 // If it exists, add questions to it, else create one
                 if (assessmentIndex) {
@@ -107,44 +157,63 @@ function AssessmentsCtrl($scope, $state, Constants, DataService, CommonFactory) 
                 }
             });
             delete vm.tempAssessments;
-            // Individual formatting
-            vm.assessments[0].arrQuestions[0].response = CommonFactory.TryConvertStringToDate(vm.assessments[0].arrQuestions[0].response);
+
+            if (false && !bItemToBeAssessedFound) {
+                //if (!bItemToBeAssessedFound) {
+                // Could not find any assessment which was not completed before. So all assessments have been completed.
+                DataService.bAssessmentsCompleted = true;
+                this.TransitionState('home');
+                return false;
+            }
+            return true;
+
+            //vm.assessments[0].arrQuestions[0].response = CommonFactory.TryConvertStringToDate(vm.assessments[0].arrQuestions[0].response);
             //vm.assessments[7].arrQuestions[0].response = CommonFactory.GetRandomCharacter();
-            vm.assessments[7].arrQuestions[0].displayedResponse = "---";
+            //vm.assessments[8].arrQuestions[0].displayedResponse = "---";
         },
         InitTab: function() {
             vm.assessments.forEach(function(oAssessment) {
                 vm.tabs.push({ title: oAssessment.name, state: oAssessment.nickName, content: oAssessment.nickName + '.html', disabled: false });
             });
-            this.InitCurrentTab();
         },
         InitCurrentTab: function() {
             vm.currentTab = [vm.tabs[vm.currentTabIndex]];
             vm.currentAssessment = vm.assessments[vm.currentTabIndex];
-            this.TransitionState(vm.currentTab[0].state);
-        },
-        GetTemplateURL: function(sPartialURL) {
-            return '' + sPartialURL + '';
+            this.TransitionState('assessments.' + vm.currentTab[0].state);
         },
         ShowHidePager: function(bShow, sMessage) {
             vm.bShowPager = bShow;
             vm.sShowPagerMessage = sMessage;
         },
-        HasGetUserMedia: function() {
-            return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
-                navigator.mozGetUserMedia || navigator.msGetUserMedia);
-        },
-        GetUserMedia: function() {
-            if (this.HasGetUserMedia()) {
-                navigator.webkitGetUserMedia({ audio: true, video: true }, function() {
-                    vm.Helper.Init();
-                }, function() {
-                    CommonFactory.Notification.error(Constants.Miscellaneous.FailedMediaAccess);                    
-                });
-            } else {
-                CommonFactory.Notification.error(Constants.Miscellaneous.NoBrowserSupport);
+        InitPersonalTab: function() {
+            // Go to last Tab
+            vm.currentTabIndex = vm.tabs.length - 1;
+            var sMessage = "";
+            if (DataService.isMobileDevice) {
+                sMessage = Constants.Miscellaneous.IsMobileDevice;
+            } else if (DataService.oSetUpIssues.bHasMicrophoneIssue) {
+                sMessage = Constants.Miscellaneous.bHasMicrophoneIssue;
+            } else if (DataService.oSetUpIssues.bHasSpeakerIssue) {
+                sMessage = Constants.Miscellaneous.bHasSpeakerIssue;
+            }
+            CommonFactory.Notification.error({ message: sMessage, delay: null });
+
+            var oPersonal = CommonFactory.FindItemInArray(vm.assessments, 'nickName', 'personal', 'item');
+            if (oPersonal) {
+                oPersonal.description = Constants.PersonalAssessment.EnterEmail;
+                var arrQuestions = CommonFactory.FindItemInArray(oPersonal.arrQuestions, 'questionId', '16', 'item');
+                oPersonal.arrQuestions = [];
+                if (arrQuestions) {
+                    oPersonal.arrQuestions.push(arrQuestions);
+                }
             }
         }
     }
+
+    $scope.$on('$locationChangeStart', function(event, next, current) {
+        // Here you can take the control and call your own functions:
+        CommonFactory.PreventGoingToDifferentPage(event, next, current, DataService);
+    });
+
     vm.Helper.GetUserMedia();
 }
